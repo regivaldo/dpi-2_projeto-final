@@ -1,0 +1,35 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ifsp-palestra-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ifsp-palestra
+      MYSQL_USER: ifsp-user-db
+      MYSQL_PASSWORD: ifsp-palestra-@12
+      MYSQL_ROOT_PASSWORD: root-ifsp-palestra-@12
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: ifsp-palestra-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - '8080:80'
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
