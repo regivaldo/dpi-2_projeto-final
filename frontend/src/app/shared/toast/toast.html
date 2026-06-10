@@ -1,6 +1,14 @@
 @if (toastService.message(); as message) {
-  <section class="toast toast-error" role="alert" aria-live="assertive">
-    <span class="toast-icon" aria-hidden="true">!</span>
+  <section
+    class="toast"
+    [class.toast-error]="message.type === 'error'"
+    [class.toast-success]="message.type === 'success'"
+    role="alert"
+    aria-live="assertive"
+  >
+    <span class="toast-icon" aria-hidden="true">
+      {{ message.type === 'success' ? '✓' : '!' }}
+    </span>
     <p>{{ message.text }}</p>
     <button
       type="button"

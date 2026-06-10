@@ -22,4 +22,18 @@ describe('Toast', () => {
     );
     toastService.dismiss();
   });
+
+  it('should render a success toast message', () => {
+    const fixture = TestBed.createComponent(Toast);
+    const toastService = TestBed.inject(ToastService);
+
+    toastService.showSuccess('Mensagem de sucesso');
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.toast-success')?.textContent).toContain(
+      'Mensagem de sucesso',
+    );
+    toastService.dismiss();
+  });
 });

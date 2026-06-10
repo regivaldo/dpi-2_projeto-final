@@ -27,6 +27,14 @@ export interface TalksResponse {
   };
 }
 
+export interface CreateTalkRequest {
+  title: string;
+  description: string;
+  date: string;
+  startTime: string;
+  folderUrl?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TalksService {
   private readonly http = inject(HttpClient);
@@ -35,21 +43,32 @@ export class TalksService {
 
   listTalks(search = ''): Observable<TalksResponse> {
     let params = new HttpParams().set('limit', 100);
-    let headers = new HttpHeaders();
+    const headers = this.buildAuthHeaders();
     const normalizedSearch = search.trim();
-    const token = this.authService.getToken();
 
     if (normalizedSearch) {
       params = params.set('search', normalizedSearch);
-    }
-
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
     }
 
     return this.http.get<TalksResponse>(`${this.apiUrl}/talks`, {
       headers,
       params,
     });
+  }
+
+  createTalk(data: CreateTalkRequest): Observable<Talk> {
+    return this.http.post<Talk>(`${this.apiUrl}/talks`, data, {
+      headers: this.buildAuthHeaders(),
+    });
+  }
+
+  private buildAuthHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+
+    if (!token) {
+      return new HttpHeaders();
+    }
+
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 }

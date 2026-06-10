@@ -24,6 +24,14 @@
     #222;
 }
 
+.toast-success {
+  background:
+    linear-gradient(90deg, rgba(87, 190, 119, 0.24), rgba(34, 34, 34, 0.96)),
+    #222;
+  border-color: #57be77;
+  border-left-color: #57be77;
+}
+
 .toast-icon {
   display: inline-flex;
   align-items: center;

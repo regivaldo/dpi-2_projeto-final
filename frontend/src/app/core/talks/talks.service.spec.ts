@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { AuthService } from '../auth/auth.service';
-import { TalksService } from './talks.service';
+import { CreateTalkRequest, TalksService } from './talks.service';
 
 describe('TalksService', () => {
   let service: TalksService;
@@ -70,6 +70,33 @@ describe('TalksService', () => {
         limit: 100,
         total: 0,
         totalPages: 0,
+      },
+    });
+  });
+
+  it('should create a talk with the bearer token', () => {
+    const payload: CreateTalkRequest = {
+      title: 'Angular moderno',
+      description: 'Palestra sobre Angular standalone.',
+      date: '2026-06-15',
+      startTime: '19:30',
+      folderUrl: 'https://example.com/palestra',
+    };
+
+    service.createTalk(payload).subscribe();
+
+    const request = httpTestingController.expectOne('http://localhost:3000/talks');
+
+    expect(request.request.method).toBe('POST');
+    expect(request.request.headers.get('Authorization')).toBe('Bearer token');
+    expect(request.request.body).toEqual(payload);
+
+    request.flush({
+      id: 'talk-1',
+      ...payload,
+      speaker: {
+        id: 'speaker-1',
+        fullName: 'Maria Palestrante',
       },
     });
   });

@@ -1,6 +1,59 @@
-<section class="placeholder-content">
-  <p class="eyebrow">Palestras</p>
-  <h1>Criar Palestra</h1>
-  <p>O cadastro de palestras será implementado em uma próxima etapa.</p>
-  <a routerLink="/palestras">Voltar para palestras</a>
+<section aria-label="Cadastro de palestra">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Palestras</p>
+      <h1>Criar Palestra</h1>
+    </div>
+    <a routerLink="/palestras" class="secondary-action">Voltar</a>
+  </div>
+
+  <form class="talk-form" [formGroup]="palestraForm" (ngSubmit)="submitPalestra()">
+    <div class="field full-width">
+      <label for="title">Título</label>
+      <input
+        id="title"
+        type="text"
+        formControlName="title"
+        maxlength="180"
+        placeholder="Digite o título da palestra"
+      />
+    </div>
+
+    <div class="field full-width">
+      <label for="description">Descrição</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="6"
+        placeholder="Descreva o conteúdo da palestra"
+      ></textarea>
+    </div>
+
+    <div class="field">
+      <label for="date">Data</label>
+      <input id="date" type="date" formControlName="date" />
+    </div>
+
+    <div class="field">
+      <label for="startTime">Horário</label>
+      <input id="startTime" type="time" formControlName="startTime" />
+    </div>
+
+    <div class="field full-width">
+      <label for="folderUrl">URL da pasta ou vídeo</label>
+      <input
+        id="folderUrl"
+        type="url"
+        formControlName="folderUrl"
+        placeholder="https://exemplo.com/pasta-da-palestra"
+      />
+    </div>
+
+    <div class="form-actions">
+      <a routerLink="/palestras" class="secondary-action">Cancelar</a>
+      <button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Cadastrando...' : 'Cadastrar palestra' }}
+      </button>
+    </div>
+  </form>
 </section>
