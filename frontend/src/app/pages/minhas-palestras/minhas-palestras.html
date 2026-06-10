@@ -61,9 +61,34 @@
                 Acessar material
               </a>
             }
+
+            <div class="card-actions">
+              <a [routerLink]="['/palestras/editar', talk.id]" class="edit-action">
+                Editar
+              </a>
+              <button
+                type="button"
+                class="delete-action"
+                (click)="openDeleteModal(talk)"
+              >
+                Deletar
+              </button>
+            </div>
           </div>
         </article>
       }
     </div>
   }
 </section>
+
+@if (selectedTalkToDelete(); as talkToDelete) {
+  <app-confirm-modal
+    title="Deletar palestra"
+    [message]="'Tem certeza que deseja deletar a palestra ' + talkToDelete.title + '? Esta ação não poderá ser desfeita.'"
+    confirmText="Deletar"
+    cancelText="Cancelar"
+    [isLoading]="isDeleting()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="closeDeleteModal()"
+  />
+}

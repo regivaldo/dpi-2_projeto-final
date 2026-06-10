@@ -28,7 +28,7 @@ describe('Login', () => {
     await TestBed.configureTestingModule({
       imports: [Login],
       providers: [
-        provideRouter([]),
+        provideRouter([{ path: '**', component: Login }]),
         {
           provide: AuthService,
           useValue: {

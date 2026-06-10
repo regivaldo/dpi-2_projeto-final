@@ -14,7 +14,7 @@ export interface Talk {
   description: string;
   date: string;
   startTime: string;
-  folderUrl?: string;
+  folderUrl?: string | null;
   speaker: TalkSpeaker;
 }
 
@@ -36,6 +36,10 @@ export interface CreateTalkRequest {
   folderUrl?: string;
 }
 
+export type UpdateTalkRequest = Partial<
+  Omit<CreateTalkRequest, 'folderUrl'> & { folderUrl: string | null }
+>;
+
 @Injectable({ providedIn: 'root' })
 export class TalksService {
   private readonly http = inject(HttpClient);
@@ -52,6 +56,24 @@ export class TalksService {
 
   createTalk(data: CreateTalkRequest): Observable<Talk> {
     return this.http.post<Talk>(`${this.apiUrl}/talks`, data, {
+      headers: this.buildAuthHeaders(),
+    });
+  }
+
+  getTalk(id: string): Observable<Talk> {
+    return this.http.get<Talk>(`${this.apiUrl}/talks/${id}`, {
+      headers: this.buildAuthHeaders(),
+    });
+  }
+
+  updateTalk(id: string, data: UpdateTalkRequest): Observable<Talk> {
+    return this.http.patch<Talk>(`${this.apiUrl}/talks/${id}`, data, {
+      headers: this.buildAuthHeaders(),
+    });
+  }
+
+  deleteTalk(id: string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/talks/${id}`, {
       headers: this.buildAuthHeaders(),
     });
   }

@@ -35,6 +35,10 @@ export const routes: Routes = [
         component: CriarPalestra,
       },
       {
+        path: 'editar/:id',
+        component: CriarPalestra,
+      },
+      {
         path: 'minhas',
         component: MinhasPalestras,
       },

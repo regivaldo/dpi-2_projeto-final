@@ -15,10 +15,12 @@ import {
 } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { Talk, TalksService } from '../../core/talks/talks.service';
+import { ConfirmModal } from '../../shared/confirm-modal/confirm-modal';
+import { ToastService } from '../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-minhas-palestras',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, ConfirmModal],
   templateUrl: './minhas-palestras.html',
   styleUrl: './minhas-palestras.scss',
 })
@@ -26,11 +28,14 @@ export class MinhasPalestras implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly talksService = inject(TalksService);
+  private readonly toastService = inject(ToastService);
 
   protected readonly currentUser = this.authService.getCurrentUser();
   protected readonly searchControl = new FormControl('', { nonNullable: true });
   protected readonly talks = signal<Talk[]>([]);
+  protected readonly selectedTalkToDelete = signal<Talk | null>(null);
   protected readonly isLoading = signal(false);
+  protected readonly isDeleting = signal(false);
   protected readonly hasError = signal(false);
   protected readonly isForbidden = signal(false);
 
@@ -83,6 +88,39 @@ export class MinhasPalestras implements OnInit {
     return startTime.slice(0, 5);
   }
 
+  protected openDeleteModal(talk: Talk): void {
+    this.selectedTalkToDelete.set(talk);
+  }
+
+  protected closeDeleteModal(): void {
+    if (this.isDeleting()) {
+      return;
+    }
+
+    this.selectedTalkToDelete.set(null);
+  }
+
+  protected confirmDelete(): void {
+    const talk = this.selectedTalkToDelete();
+
+    if (!talk) {
+      return;
+    }
+
+    this.isDeleting.set(true);
+    this.talksService
+      .deleteTalk(talk.id)
+      .pipe(finalize(() => this.isDeleting.set(false)))
+      .subscribe({
+        next: () => {
+          this.talks.update((items) => items.filter((item) => item.id !== talk.id));
+          this.selectedTalkToDelete.set(null);
+          this.toastService.showSuccess('Palestra deletada com sucesso.');
+        },
+        error: (error: unknown) => this.handleDeleteError(error),
+      });
+  }
+
   private handleListError(error: unknown): void {
     if (error instanceof HttpErrorResponse && error.status === 401) {
       this.authService.logout();
@@ -96,5 +134,28 @@ export class MinhasPalestras implements OnInit {
     }
 
     this.hasError.set(true);
+  }
+
+  private handleDeleteError(error: unknown): void {
+    if (error instanceof HttpErrorResponse && error.status === 401) {
+      this.authService.logout();
+      void this.router.navigate(['/login']);
+      return;
+    }
+
+    if (error instanceof HttpErrorResponse && error.status === 403) {
+      this.toastService.showError('Você não pode deletar esta palestra.');
+      return;
+    }
+
+    if (error instanceof HttpErrorResponse && error.status === 404) {
+      this.toastService.showError('Palestra não encontrada.');
+      this.selectedTalkToDelete.set(null);
+      return;
+    }
+
+    this.toastService.showError(
+      'Não foi possível deletar a palestra. Tente novamente.',
+    );
   }
 }

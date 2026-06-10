@@ -126,3 +126,15 @@ button:disabled {
     width: 100%;
   }
 }
+
+
+.state-message {
+  min-height: 120px;
+  max-width: 880px;
+  margin: 0;
+  padding: 32px;
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+}

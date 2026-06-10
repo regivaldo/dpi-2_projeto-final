@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { vi } from 'vitest';
@@ -65,9 +65,9 @@ describe('Palestras', () => {
     fixture = TestBed.createComponent(Palestras);
   });
 
-  it('should show the talk list content', fakeAsync(() => {
+  it('should show the talk list content', async () => {
     fixture.detectChanges();
-    tick(250);
+    await waitForDebounce();
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -76,11 +76,11 @@ describe('Palestras', () => {
     expect(compiled.textContent).toContain('Arquitetura de APIs com NestJS');
     expect(compiled.textContent).toContain('Criado por: Maria Palestrante');
     expect(compiled.querySelector('img.talk-image')).toBeTruthy();
-  }));
+  });
 
-  it('should search talks with the typed term', fakeAsync(() => {
+  it('should search talks with the typed term', async () => {
     fixture.detectChanges();
-    tick(250);
+    await waitForDebounce();
 
     const input = fixture.nativeElement.querySelector(
       'input[type="search"]',
@@ -88,8 +88,12 @@ describe('Palestras', () => {
     input.value = 'nestjs';
     input.dispatchEvent(new Event('input', { bubbles: true }));
 
-    tick(250);
+    await waitForDebounce();
 
     expect(listTalksSpy).toHaveBeenCalledWith('nestjs');
-  }));
+  });
 });
+
+function waitForDebounce(): Promise<void> {
+  return new Promise((resolve) => window.setTimeout(resolve, 300));
+}
