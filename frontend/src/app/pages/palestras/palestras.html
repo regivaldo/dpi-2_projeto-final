@@ -35,8 +35,16 @@
             loading="lazy"
           />
           <div class="talk-card-content">
-            <h2>{{ talk.title }}</h2>
+            <div class="talk-title-row">
+              <h2>{{ talk.title }}</h2>
+              @if (isEnrolled(talk)) {
+                <span class="status-tag">Inscrito</span>
+              }
+            </div>
             <p>Criado por: {{ talk.speaker.fullName }}</p>
+            <a [routerLink]="['/palestras', talk.id]" class="details-action">
+              Detalhes
+            </a>
           </div>
         </article>
       }

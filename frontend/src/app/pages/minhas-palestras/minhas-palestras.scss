@@ -84,6 +84,17 @@ input:focus {
   margin-top: auto;
 }
 
+.attendees-count {
+  min-height: 42px;
+  padding: 11px 12px;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 900;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+}
+
 .edit-action {
   color: #17221f;
   background: var(--color-highlight);
@@ -199,7 +210,8 @@ dd {
 
   .primary-action,
   .edit-action,
-  .delete-action {
+  .delete-action,
+  .attendees-count {
     width: 100%;
   }
 

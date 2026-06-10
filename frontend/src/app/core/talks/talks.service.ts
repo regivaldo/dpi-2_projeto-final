@@ -8,6 +8,12 @@ export interface TalkSpeaker {
   fullName: string;
 }
 
+export interface TalkAttendee {
+  id: string;
+  fullName: string;
+  email: string;
+}
+
 export interface Talk {
   id: string;
   title: string;
@@ -16,6 +22,7 @@ export interface Talk {
   startTime: string;
   folderUrl?: string | null;
   speaker: TalkSpeaker;
+  attendees: TalkAttendee[];
 }
 
 export interface TalksResponse {
@@ -74,6 +81,22 @@ export class TalksService {
 
   deleteTalk(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/talks/${id}`, {
+      headers: this.buildAuthHeaders(),
+    });
+  }
+
+  enroll(id: string): Observable<Talk> {
+    return this.http.post<Talk>(
+      `${this.apiUrl}/talks/${id}/enrollments`,
+      {},
+      {
+        headers: this.buildAuthHeaders(),
+      },
+    );
+  }
+
+  cancelEnrollment(id: string): Observable<Talk> {
+    return this.http.delete<Talk>(`${this.apiUrl}/talks/${id}/enrollments/me`, {
       headers: this.buildAuthHeaders(),
     });
   }

@@ -88,6 +88,12 @@ export class MinhasPalestras implements OnInit {
     return startTime.slice(0, 5);
   }
 
+  protected formatAttendeesCount(talk: Talk): string {
+    const count = talk.attendees.length;
+
+    return `${count} ${count === 1 ? 'Inscrito' : 'Inscritos'}`;
+  }
+
   protected openDeleteModal(talk: Talk): void {
     this.selectedTalkToDelete.set(talk);
   }

@@ -10,58 +10,82 @@
   @if (isLoading()) {
     <p class="state-message">Carregando dados da palestra...</p>
   } @else {
-    <form class="talk-form" [formGroup]="palestraForm" (ngSubmit)="submitPalestra()">
-      <div class="field full-width">
-        <label for="title">Título</label>
-        <input
-          id="title"
-          type="text"
-          formControlName="title"
-          maxlength="180"
-          placeholder="Digite o título da palestra"
-        />
-      </div>
+    <div class="edit-layout">
+      <form class="talk-form" [formGroup]="palestraForm" (ngSubmit)="submitPalestra()">
+        <div class="field full-width">
+          <label for="title">Título</label>
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            maxlength="180"
+            placeholder="Digite o título da palestra"
+          />
+        </div>
 
-      <div class="field full-width">
-        <label for="description">Descrição</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          rows="6"
-          placeholder="Descreva o conteúdo da palestra"
-        ></textarea>
-      </div>
+        <div class="field full-width">
+          <label for="description">Descrição</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="6"
+            placeholder="Descreva o conteúdo da palestra"
+          ></textarea>
+        </div>
 
-      <div class="field">
-        <label for="date">Data</label>
-        <input id="date" type="date" formControlName="date" />
-      </div>
+        <div class="field">
+          <label for="date">Data</label>
+          <input id="date" type="date" formControlName="date" />
+        </div>
 
-      <div class="field">
-        <label for="startTime">Horário</label>
-        <input id="startTime" type="time" formControlName="startTime" />
-      </div>
+        <div class="field">
+          <label for="startTime">Horário</label>
+          <input id="startTime" type="time" formControlName="startTime" />
+        </div>
 
-      <div class="field full-width">
-        <label for="folderUrl">URL da pasta ou vídeo</label>
-        <input
-          id="folderUrl"
-          type="url"
-          formControlName="folderUrl"
-          placeholder="https://exemplo.com/pasta-da-palestra"
-        />
-      </div>
+        <div class="field full-width">
+          <label for="folderUrl">URL da pasta ou vídeo</label>
+          <input
+            id="folderUrl"
+            type="url"
+            formControlName="folderUrl"
+            placeholder="https://exemplo.com/pasta-da-palestra"
+          />
+        </div>
 
-      <div class="form-actions">
-        <a routerLink="/palestras/minhas" class="secondary-action">Cancelar</a>
-        <button type="submit" [disabled]="isSubmitting()">
-          @if (isSubmitting()) {
-            {{ isEditMode ? 'Salvando...' : 'Cadastrando...' }}
+        <div class="form-actions">
+          <a routerLink="/palestras/minhas" class="secondary-action">Cancelar</a>
+          <button type="submit" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              {{ isEditMode ? 'Salvando...' : 'Cadastrando...' }}
+            } @else {
+              {{ isEditMode ? 'Salvar alterações' : 'Cadastrar palestra' }}
+            }
+          </button>
+        </div>
+      </form>
+
+      @if (isEditMode && selectedTalk(); as talk) {
+        <aside class="attendees-panel" aria-label="Usuários inscritos">
+          <div>
+            <p class="panel-label">Inscrições</p>
+            <h2>{{ getAttendeesCount() }}</h2>
+          </div>
+
+          @if (talk.attendees.length === 0) {
+            <p class="empty-attendees">Nenhum usuário inscrito.</p>
           } @else {
-            {{ isEditMode ? 'Salvar alterações' : 'Cadastrar palestra' }}
+            <ul class="attendees-list">
+              @for (attendee of talk.attendees; track attendee.id) {
+                <li>
+                  <strong>{{ attendee.fullName }}</strong>
+                  <span>{{ attendee.email }}</span>
+                </li>
+              }
+            </ul>
           }
-        </button>
-      </div>
-    </form>
+        </aside>
+      }
+    </div>
   }
 </section>

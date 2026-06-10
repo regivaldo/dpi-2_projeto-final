@@ -54,6 +54,7 @@ export class CriarPalestra implements OnInit {
   });
   protected readonly talkId = this.route.snapshot.paramMap.get('id');
   protected readonly isEditMode = Boolean(this.talkId);
+  protected readonly selectedTalk = signal<Talk | null>(null);
   protected readonly isLoading = signal(false);
   protected readonly isSubmitting = signal(false);
 
@@ -120,6 +121,7 @@ export class CriarPalestra implements OnInit {
   }
 
   private fillForm(talk: Talk): void {
+    this.selectedTalk.set(talk);
     this.palestraForm.setValue({
       title: talk.title,
       description: talk.description,
@@ -127,6 +129,12 @@ export class CriarPalestra implements OnInit {
       startTime: talk.startTime.slice(0, 5),
       folderUrl: talk.folderUrl ?? '',
     });
+  }
+
+  protected getAttendeesCount(): string {
+    const count = this.selectedTalk()?.attendees.length ?? 0;
+
+    return `${count} ${count === 1 ? 'usuário inscrito' : 'usuários inscritos'}`;
   }
 
   private buildCreateTalkPayload(): CreateTalkRequest {

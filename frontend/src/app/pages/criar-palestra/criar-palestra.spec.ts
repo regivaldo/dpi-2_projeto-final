@@ -309,6 +309,7 @@ function createTalk(overrides: Partial<Talk> = {}): Talk {
       id: 'speaker-1',
       fullName: 'Maria Palestrante',
     },
+    attendees: [],
     ...overrides,
   };
 }

@@ -70,7 +70,16 @@ h1 {
 }
 
 .talk-card-content {
+  display: grid;
+  gap: 16px;
   padding: 18px;
+}
+
+.talk-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
 }
 
 .talk-card h2 {
@@ -80,9 +89,35 @@ h1 {
 }
 
 .talk-card p {
-  margin: 16px 0 0;
+  margin: 0;
   color: rgba(255, 255, 255, 0.72);
   font-weight: 700;
+}
+
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  color: #17221f;
+  font-size: 0.76rem;
+  font-weight: 900;
+  background: var(--color-highlight);
+  border-radius: 4px;
+}
+
+.details-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 40px;
+  padding: 0 16px;
+  color: #17221f;
+  font-weight: 900;
+  text-decoration: none;
+  background: var(--color-highlight);
+  border-radius: 4px;
 }
 
 .state-message {
@@ -102,5 +137,9 @@ h1 {
 @media (max-width: 920px) {
   .section-heading {
     grid-template-columns: 1fr;
+  }
+
+  .details-action {
+    width: 100%;
   }
 }

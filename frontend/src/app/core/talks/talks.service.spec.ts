@@ -155,6 +155,33 @@ describe('TalksService', () => {
 
     request.flush({ message: 'Palestra deletada com sucesso.' });
   });
+
+  it('should enroll in a talk with the bearer token', () => {
+    service.enroll('talk-1').subscribe();
+
+    const request = httpTestingController.expectOne(
+      'http://localhost:3000/talks/talk-1/enrollments',
+    );
+
+    expect(request.request.method).toBe('POST');
+    expect(request.request.headers.get('Authorization')).toBe('Bearer token');
+    expect(request.request.body).toEqual({});
+
+    request.flush(createTalk());
+  });
+
+  it('should cancel enrollment with the bearer token', () => {
+    service.cancelEnrollment('talk-1').subscribe();
+
+    const request = httpTestingController.expectOne(
+      'http://localhost:3000/talks/talk-1/enrollments/me',
+    );
+
+    expect(request.request.method).toBe('DELETE');
+    expect(request.request.headers.get('Authorization')).toBe('Bearer token');
+
+    request.flush(createTalk());
+  });
 });
 
 function createTalk(
@@ -172,6 +199,7 @@ function createTalk(
       id: 'speaker-1',
       fullName: 'Maria Palestrante',
     },
+    attendees: [],
     ...overrides,
   };
 }

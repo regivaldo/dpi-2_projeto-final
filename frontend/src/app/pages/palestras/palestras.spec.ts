@@ -24,6 +24,7 @@ describe('Palestras', () => {
               id: 'speaker-1',
               fullName: 'Maria Palestrante',
             },
+            attendees: [],
           },
         ],
         meta: {
@@ -75,6 +76,7 @@ describe('Palestras', () => {
     expect(compiled.textContent).toContain('Conteúdos disponíveis');
     expect(compiled.textContent).toContain('Arquitetura de APIs com NestJS');
     expect(compiled.textContent).toContain('Criado por: Maria Palestrante');
+    expect(compiled.textContent).toContain('Detalhes');
     expect(compiled.querySelector('img.talk-image')).toBeTruthy();
   });
 

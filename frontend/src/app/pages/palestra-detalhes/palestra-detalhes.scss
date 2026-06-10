@@ -1,0 +1,205 @@
+.section-heading {
+  display: flex;
+  gap: 20px;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--color-highlight);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3.6rem);
+}
+
+h2 {
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+}
+
+.details-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  gap: 24px;
+  align-items: start;
+}
+
+.talk-details,
+.enrollment-panel,
+.state-message {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+}
+
+.talk-details {
+  display: grid;
+  gap: 18px;
+  overflow: hidden;
+}
+
+.talk-details > :not(.talk-image) {
+  margin-right: 24px;
+  margin-left: 24px;
+}
+
+.talk-details > :last-child {
+  margin-bottom: 24px;
+}
+
+.talk-image {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #17221f;
+}
+
+.title-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  color: #17221f;
+  font-size: 0.78rem;
+  font-weight: 900;
+  background: var(--color-highlight);
+  border-radius: 4px;
+}
+
+.speaker,
+.description {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.talk-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.talk-meta div {
+  display: grid;
+  gap: 4px;
+}
+
+dt {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0;
+  font-weight: 900;
+}
+
+.enrollment-panel {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.primary-action,
+.cancel-action,
+.secondary-action,
+.material-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  font: inherit;
+  font-weight: 900;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.primary-action {
+  color: #17221f;
+  cursor: pointer;
+  background: var(--color-highlight);
+  border: 0;
+}
+
+.cancel-action {
+  color: #fff7f5;
+  cursor: pointer;
+  background: #b83224;
+  border: 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
+}
+
+.secondary-action,
+.material-link {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.material-link {
+  width: fit-content;
+}
+
+.state-message {
+  min-height: 120px;
+  margin: 0;
+  padding: 32px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.error-message {
+  color: #ffd7d1;
+}
+
+@media (max-width: 860px) {
+  .section-heading,
+  .details-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .talk-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .primary-action,
+  .cancel-action,
+  .secondary-action {
+    width: 100%;
+  }
+}
