@@ -66,7 +66,13 @@ Do not commit secrets, local environment files, or generated dependency director
 
 ## Angular MCP
 
-Sempre que a tarefa envolver o frontend Angular, use o MCP `angular-cli` configurado em `.vscode/mcp.json` antes de fazer alterações relevantes.
+Sempre que a tarefa envolver o frontend Angular, use obrigatoriamente o MCP `angular-cli` configurado em `.vscode/mcp.json` antes de fazer alterações relevantes.
+
+Fluxo obrigatório para tarefas Angular:
+- iniciar consultando o MCP `angular-cli` com `list_projects` para identificar o workspace, projeto, versão do Angular e estrutura;
+- antes de criar ou alterar código Angular, chamar `get_best_practices` usando o caminho do workspace retornado por `list_projects`;
+- quando houver dúvida sobre API, sintaxe, recurso ou padrão moderno do Angular, usar `search_documentation` ou `find_examples` do MCP em vez de depender apenas de conhecimento prévio;
+- preferir as ferramentas do MCP para validar estrutura, padrões, componentes, rotas e serviços Angular antes de recorrer a comandos diretos no shell.
 
 Use o MCP para:
 - consultar padrões e recursos do Angular;

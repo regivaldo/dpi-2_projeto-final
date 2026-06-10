@@ -2,9 +2,15 @@
   // For more information, visit: https://angular.dev/ai/mcp
   "servers": {
     "angular-cli": {
-      "command": "npx",
-      "args": ["-y", "@angular/cli", "mcp"],
-      "cwd": "${workspaceFolder}/frontend"
+      "command": "wsl.exe",
+      "args": [
+        "-d",
+        "Ubuntu",
+        "--",
+        "bash",
+        "-lc",
+        "source /home/regivaldo/.nvm/nvm.sh && nvm use 22.21.1 >/dev/null && cd /home/regivaldo/projects/dpi-2_projeto-final/frontend && npx -y @angular/cli mcp"
+      ]
     }
   }
 }
