@@ -8,9 +8,9 @@ import { Repository } from 'typeorm';
 import type { AuthenticatedUser } from '../auth/auth.types';
 import { User } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
-import { CreateTalkDto } from './dto/create-talk.dto';
+import { CreateTalkWithCoverDto } from './dto/create-talk.dto';
 import { ListTalksQueryDto } from './dto/list-talks-query.dto';
-import { UpdateTalkDto } from './dto/update-talk.dto';
+import { UpdateTalkWithCoverDto } from './dto/update-talk.dto';
 import { Talk } from './talk.entity';
 
 @Injectable()
@@ -21,7 +21,10 @@ export class TalksService {
     private readonly usersService: UsersService,
   ) {}
 
-  async create(createTalkDto: CreateTalkDto, currentUser: AuthenticatedUser) {
+  async create(
+    createTalkDto: CreateTalkWithCoverDto,
+    currentUser: AuthenticatedUser,
+  ) {
     const speaker = await this.getUserOrFail(currentUser.id);
     const talk = this.talksRepository.create({
       ...createTalkDto,
@@ -92,7 +95,7 @@ export class TalksService {
 
   async update(
     id: string,
-    updateTalkDto: UpdateTalkDto,
+    updateTalkDto: UpdateTalkWithCoverDto,
     currentUser: AuthenticatedUser,
   ) {
     const talk = await this.findOne(id);

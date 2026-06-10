@@ -53,6 +53,23 @@
           />
         </div>
 
+        <div class="cover-field full-width">
+          <label for="coverImage">Capa da palestra</label>
+          <div class="cover-input-grid">
+            <img
+              [src]="coverPreviewUrl()"
+              alt="Preview da capa"
+              class="cover-preview"
+            />
+            <input
+              id="coverImage"
+              type="file"
+              accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+              (change)="onCoverSelected($event)"
+            />
+          </div>
+        </div>
+
         <div class="form-actions">
           <a routerLink="/palestras/minhas" class="secondary-action">Cancelar</a>
           <button type="submit" [disabled]="isSubmitting()">

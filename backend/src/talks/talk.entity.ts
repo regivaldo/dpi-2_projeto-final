@@ -29,7 +29,10 @@ export class Talk {
   startTime: string;
 
   @Column({ name: 'folder_url', length: 500, nullable: true })
-  folderUrl?: string;
+  folderUrl?: string | null;
+
+  @Column({ name: 'cover_image_url', length: 500, nullable: true })
+  coverImageUrl?: string | null;
 
   @ManyToOne(() => User, { eager: true, nullable: false })
   @JoinColumn({ name: 'speaker_id' })

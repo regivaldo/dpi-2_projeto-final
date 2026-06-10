@@ -23,6 +23,8 @@ describe('CriarPalestra', () => {
   let requestedTalkId: string | null;
   let logoutSpy: ReturnType<typeof vi.fn>;
   let routeId: string | null;
+  let createObjectUrlSpy: ReturnType<typeof vi.fn>;
+  let revokeObjectUrlSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     routeId = null;
@@ -31,6 +33,16 @@ describe('CriarPalestra', () => {
     lastUpdateTalkId = null;
     requestedTalkId = null;
     logoutSpy = vi.fn();
+    createObjectUrlSpy = vi.fn().mockReturnValue('blob:cover-preview');
+    revokeObjectUrlSpy = vi.fn();
+    Object.defineProperty(URL, 'createObjectURL', {
+      configurable: true,
+      value: createObjectUrlSpy,
+    });
+    Object.defineProperty(URL, 'revokeObjectURL', {
+      configurable: true,
+      value: revokeObjectUrlSpy,
+    });
     createTalkResponse = of(createTalk());
     getTalkResponse = of(createTalk({ startTime: '19:30:00' }));
     updateTalkResponse = of(createTalk({ title: 'Angular atualizado' }));
@@ -71,6 +83,8 @@ describe('CriarPalestra', () => {
               lastUpdateTalkRequest = request;
               return updateTalkResponse;
             },
+            resolveCoverImageUrl: (coverImageUrl?: string | null) =>
+              coverImageUrl ? `http://localhost:3000${coverImageUrl}` : null,
           },
         },
       ],
@@ -94,6 +108,8 @@ describe('CriarPalestra', () => {
     expect(compiled.querySelector('input[type="date"]')).toBeTruthy();
     expect(compiled.querySelector('input[type="time"]')).toBeTruthy();
     expect(compiled.querySelector('input[type="url"]')).toBeTruthy();
+    expect(compiled.querySelector('input[type="file"]')).toBeTruthy();
+    expect(compiled.querySelector('.cover-preview')).toBeTruthy();
     expect(compiled.querySelector('button')?.textContent).toContain(
       'Cadastrar palestra',
     );
@@ -172,6 +188,47 @@ describe('CriarPalestra', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['/palestras/minhas']);
   });
 
+  it('should include a selected cover image when creating a talk', () => {
+    const coverImage = new File(['cover'], 'capa.png', { type: 'image/png' });
+    const fixture = createFixture();
+    fixture.detectChanges();
+
+    fillValidForm(fixture.nativeElement);
+    selectCoverImage(fixture.nativeElement, coverImage);
+    submitForm(fixture.nativeElement);
+
+    expect(lastCreateTalkRequest?.coverImage).toBe(coverImage);
+    expect(createObjectUrlSpy).toHaveBeenCalledWith(coverImage);
+  });
+
+  it('should reject invalid cover image type', () => {
+    const toastService = TestBed.inject(ToastService);
+    const invalidCover = new File(['cover'], 'capa.gif', { type: 'image/gif' });
+    const fixture = createFixture();
+    fixture.detectChanges();
+
+    selectCoverImage(fixture.nativeElement, invalidCover);
+
+    expect(toastService.message()?.text).toBe(
+      'A capa deve ser uma imagem PNG ou JPG.',
+    );
+    expect(createObjectUrlSpy).not.toHaveBeenCalled();
+  });
+
+  it('should reject cover image larger than 5 MB', () => {
+    const toastService = TestBed.inject(ToastService);
+    const largeCover = new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'capa.jpg', {
+      type: 'image/jpeg',
+    });
+    const fixture = createFixture();
+    fixture.detectChanges();
+
+    selectCoverImage(fixture.nativeElement, largeCover);
+
+    expect(toastService.message()?.text).toBe('A capa deve ter no máximo 5 MB.');
+    expect(createObjectUrlSpy).not.toHaveBeenCalled();
+  });
+
   it('should omit folderUrl when it is empty on create', () => {
     const fixture = createFixture();
     fixture.detectChanges();
@@ -230,6 +287,7 @@ describe('CriarPalestra', () => {
       date: '2026-06-20',
       startTime: '20:00',
       folderUrl: null,
+      coverImage: null,
     });
     expect(toastService.message()).toEqual({
       text: 'Palestra atualizada com sucesso.',
@@ -305,6 +363,7 @@ function createTalk(overrides: Partial<Talk> = {}): Talk {
     date: '2026-06-15',
     startTime: '19:30',
     folderUrl: 'https://example.com/palestra',
+    coverImageUrl: null,
     speaker: {
       id: 'speaker-1',
       fullName: 'Maria Palestrante',
@@ -346,4 +405,13 @@ function fillTextarea(element: HTMLElement, selector: string, value: string): vo
   const textarea = element.querySelector(selector) as HTMLTextAreaElement;
   textarea.value = value;
   textarea.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function selectCoverImage(element: HTMLElement, file: File): void {
+  const input = element.querySelector('input[type="file"]') as HTMLInputElement;
+  Object.defineProperty(input, 'files', {
+    configurable: true,
+    value: [file],
+  });
+  input.dispatchEvent(new Event('change', { bubbles: true }));
 }

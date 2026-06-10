@@ -32,6 +32,7 @@ export class Palestras implements OnInit {
   protected readonly talks = signal<Talk[]>([]);
   protected readonly isLoading = signal(false);
   protected readonly hasError = signal(false);
+  protected readonly placeholderCoverUrl = '/talk-placeholder.svg';
 
   constructor() {
     if (!this.currentUser) {
@@ -69,6 +70,13 @@ export class Palestras implements OnInit {
 
   protected isEnrolled(talk: Talk): boolean {
     return talk.attendees.some((attendee) => attendee.id === this.currentUser?.id);
+  }
+
+  protected getCoverImageUrl(talk: Talk): string {
+    return (
+      this.talksService.resolveCoverImageUrl(talk.coverImageUrl) ??
+      this.placeholderCoverUrl
+    );
   }
 
   private handleListError(error: unknown): void {

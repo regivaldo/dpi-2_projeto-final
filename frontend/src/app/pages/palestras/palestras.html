@@ -29,7 +29,7 @@
       @for (talk of talks(); track talk.id) {
         <article class="talk-card">
           <img
-            src="/talk-placeholder.svg"
+            [src]="getCoverImageUrl(talk)"
             alt=""
             class="talk-image"
             loading="lazy"

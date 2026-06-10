@@ -7,6 +7,7 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from '../auth/auth.service';
 import {
   CreateTalkRequest,
+  Talk,
   TalksService,
   UpdateTalkRequest,
 } from './talks.service';
@@ -103,9 +104,42 @@ describe('TalksService', () => {
 
     expect(request.request.method).toBe('POST');
     expect(request.request.headers.get('Authorization')).toBe('Bearer token');
-    expect(request.request.body).toEqual(payload);
+    expectFormData(request.request.body, {
+      title: 'Angular moderno',
+      description: 'Palestra sobre Angular standalone.',
+      date: '2026-06-15',
+      startTime: '19:30',
+      folderUrl: 'https://example.com/palestra',
+    });
 
     request.flush(createTalk(payload));
+  });
+
+  it('should send cover image when creating a talk', () => {
+    const coverImage = new File(['cover'], 'capa.png', { type: 'image/png' });
+    const payload: CreateTalkRequest = {
+      title: 'Angular moderno',
+      description: 'Palestra sobre Angular standalone.',
+      date: '2026-06-15',
+      startTime: '19:30',
+      coverImage,
+    };
+
+    service.createTalk(payload).subscribe();
+
+    const request = httpTestingController.expectOne('http://localhost:3000/talks');
+
+    expect(request.request.body).toBeInstanceOf(FormData);
+    expect(request.request.body.get('coverImage')).toBe(coverImage);
+
+    request.flush(createTalk({ coverImageUrl: '/uploads/talk-covers/capa.png' }));
+  });
+
+  it('should resolve relative cover image URLs against the API URL', () => {
+    expect(service.resolveCoverImageUrl('/uploads/talk-covers/capa.png')).toBe(
+      'http://localhost:3000/uploads/talk-covers/capa.png',
+    );
+    expect(service.resolveCoverImageUrl(null)).toBeNull();
   });
 
   it('should get a talk by id with the bearer token', () => {
@@ -138,7 +172,13 @@ describe('TalksService', () => {
 
     expect(request.request.method).toBe('PATCH');
     expect(request.request.headers.get('Authorization')).toBe('Bearer token');
-    expect(request.request.body).toEqual(payload);
+    expectFormData(request.request.body, {
+      title: 'Angular atualizado',
+      description: 'Descrição atualizada.',
+      date: '2026-06-20',
+      startTime: '20:00',
+      folderUrl: '',
+    });
 
     request.flush(createTalk(payload));
   });
@@ -184,11 +224,7 @@ describe('TalksService', () => {
   });
 });
 
-function createTalk(
-  overrides: Partial<Omit<CreateTalkRequest, 'folderUrl'>> & {
-    folderUrl?: string | null;
-  } = {},
-) {
+function createTalk(overrides: Partial<Talk> = {}): Talk {
   return {
     id: 'talk-1',
     title: 'Angular moderno',
@@ -214,4 +250,13 @@ function createTalksResponse(items: unknown[]) {
       totalPages: items.length > 0 ? 1 : 0,
     },
   };
+}
+
+function expectFormData(body: unknown, values: Record<string, string>): void {
+  expect(body).toBeInstanceOf(FormData);
+  const formData = body as FormData;
+
+  Object.entries(values).forEach(([key, value]) => {
+    expect(formData.get(key)).toBe(value);
+  });
 }

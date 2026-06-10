@@ -24,6 +24,7 @@ describe('Palestras', () => {
               id: 'speaker-1',
               fullName: 'Maria Palestrante',
             },
+            coverImageUrl: '/uploads/talk-covers/capa.png',
             attendees: [],
           },
         ],
@@ -58,6 +59,8 @@ describe('Palestras', () => {
           provide: TalksService,
           useValue: {
             listTalks: listTalksSpy,
+            resolveCoverImageUrl: (coverImageUrl?: string | null) =>
+              coverImageUrl ? `http://localhost:3000${coverImageUrl}` : null,
           },
         },
       ],
@@ -78,6 +81,9 @@ describe('Palestras', () => {
     expect(compiled.textContent).toContain('Criado por: Maria Palestrante');
     expect(compiled.textContent).toContain('Detalhes');
     expect(compiled.querySelector('img.talk-image')).toBeTruthy();
+    expect(compiled.querySelector('img.talk-image')?.getAttribute('src')).toBe(
+      'http://localhost:3000/uploads/talk-covers/capa.png',
+    );
   });
 
   it('should search talks with the typed term', async () => {

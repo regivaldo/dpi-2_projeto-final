@@ -21,6 +21,7 @@ export interface Talk {
   date: string;
   startTime: string;
   folderUrl?: string | null;
+  coverImageUrl?: string | null;
   speaker: TalkSpeaker;
   attendees: TalkAttendee[];
 }
@@ -41,6 +42,7 @@ export interface CreateTalkRequest {
   date: string;
   startTime: string;
   folderUrl?: string;
+  coverImage?: File | null;
 }
 
 export type UpdateTalkRequest = Partial<
@@ -62,9 +64,13 @@ export class TalksService {
   }
 
   createTalk(data: CreateTalkRequest): Observable<Talk> {
-    return this.http.post<Talk>(`${this.apiUrl}/talks`, data, {
-      headers: this.buildAuthHeaders(),
-    });
+    return this.http.post<Talk>(
+      `${this.apiUrl}/talks`,
+      this.buildTalkFormData(data),
+      {
+        headers: this.buildAuthHeaders(),
+      },
+    );
   }
 
   getTalk(id: string): Observable<Talk> {
@@ -74,9 +80,13 @@ export class TalksService {
   }
 
   updateTalk(id: string, data: UpdateTalkRequest): Observable<Talk> {
-    return this.http.patch<Talk>(`${this.apiUrl}/talks/${id}`, data, {
-      headers: this.buildAuthHeaders(),
-    });
+    return this.http.patch<Talk>(
+      `${this.apiUrl}/talks/${id}`,
+      this.buildTalkFormData(data),
+      {
+        headers: this.buildAuthHeaders(),
+      },
+    );
   }
 
   deleteTalk(id: string): Observable<{ message: string }> {
@@ -99,6 +109,46 @@ export class TalksService {
     return this.http.delete<Talk>(`${this.apiUrl}/talks/${id}/enrollments/me`, {
       headers: this.buildAuthHeaders(),
     });
+  }
+
+  resolveCoverImageUrl(coverImageUrl?: string | null): string | null {
+    if (!coverImageUrl) {
+      return null;
+    }
+
+    if (/^https?:\/\//.test(coverImageUrl)) {
+      return coverImageUrl;
+    }
+
+    return new URL(coverImageUrl, this.apiUrl).toString();
+  }
+
+  private buildTalkFormData(data: CreateTalkRequest | UpdateTalkRequest): FormData {
+    const formData = new FormData();
+
+    this.appendFormValue(formData, 'title', data.title);
+    this.appendFormValue(formData, 'description', data.description);
+    this.appendFormValue(formData, 'date', data.date);
+    this.appendFormValue(formData, 'startTime', data.startTime);
+    this.appendFormValue(formData, 'folderUrl', data.folderUrl);
+
+    if (data.coverImage) {
+      formData.append('coverImage', data.coverImage);
+    }
+
+    return formData;
+  }
+
+  private appendFormValue(
+    formData: FormData,
+    key: string,
+    value: string | null | undefined,
+  ): void {
+    if (value === undefined) {
+      return;
+    }
+
+    formData.append(key, value ?? '');
   }
 
   private listTalksFromEndpoint(

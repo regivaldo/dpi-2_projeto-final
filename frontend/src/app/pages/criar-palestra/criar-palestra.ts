@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -23,12 +23,17 @@ import { ToastService } from '../../shared/toast/toast.service';
   templateUrl: './criar-palestra.html',
   styleUrl: './criar-palestra.scss',
 })
-export class CriarPalestra implements OnInit {
+export class CriarPalestra implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly talksService = inject(TalksService);
   private readonly toastService = inject(ToastService);
+  private objectPreviewUrl: string | null = null;
+
+  private readonly allowedCoverTypes = ['image/png', 'image/jpeg'];
+  private readonly maxCoverSizeBytes = 5 * 1024 * 1024;
+  private readonly placeholderCoverUrl = '/talk-placeholder.svg';
 
   protected readonly palestraForm = new FormGroup({
     title: new FormControl('', {
@@ -55,6 +60,8 @@ export class CriarPalestra implements OnInit {
   protected readonly talkId = this.route.snapshot.paramMap.get('id');
   protected readonly isEditMode = Boolean(this.talkId);
   protected readonly selectedTalk = signal<Talk | null>(null);
+  protected readonly selectedCoverFile = signal<File | null>(null);
+  protected readonly coverPreviewUrl = signal(this.placeholderCoverUrl);
   protected readonly isLoading = signal(false);
   protected readonly isSubmitting = signal(false);
 
@@ -71,6 +78,10 @@ export class CriarPalestra implements OnInit {
         next: (talk) => this.fillForm(talk),
         error: (error: unknown) => this.handleLoadError(error),
       });
+  }
+
+  ngOnDestroy(): void {
+    this.revokeObjectPreviewUrl();
   }
 
   protected submitPalestra(): void {
@@ -122,6 +133,7 @@ export class CriarPalestra implements OnInit {
 
   private fillForm(talk: Talk): void {
     this.selectedTalk.set(talk);
+    this.coverPreviewUrl.set(this.getCoverImageUrl(talk));
     this.palestraForm.setValue({
       title: talk.title,
       description: talk.description,
@@ -135,6 +147,29 @@ export class CriarPalestra implements OnInit {
     const count = this.selectedTalk()?.attendees.length ?? 0;
 
     return `${count} ${count === 1 ? 'usuário inscrito' : 'usuários inscritos'}`;
+  }
+
+  protected onCoverSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+
+    if (!file) {
+      this.selectedCoverFile.set(null);
+      return;
+    }
+
+    if (!this.allowedCoverTypes.includes(file.type)) {
+      this.rejectCoverFile(input, 'A capa deve ser uma imagem PNG ou JPG.');
+      return;
+    }
+
+    if (file.size > this.maxCoverSizeBytes) {
+      this.rejectCoverFile(input, 'A capa deve ter no máximo 5 MB.');
+      return;
+    }
+
+    this.selectedCoverFile.set(file);
+    this.setObjectPreviewUrl(file);
   }
 
   private buildCreateTalkPayload(): CreateTalkRequest {
@@ -151,6 +186,12 @@ export class CriarPalestra implements OnInit {
       payload.folderUrl = folderUrl;
     }
 
+    const coverImage = this.selectedCoverFile();
+
+    if (coverImage) {
+      payload.coverImage = coverImage;
+    }
+
     return payload;
   }
 
@@ -164,7 +205,37 @@ export class CriarPalestra implements OnInit {
       date: formValue.date,
       startTime: formValue.startTime,
       folderUrl: folderUrl || null,
+      coverImage: this.selectedCoverFile(),
     };
+  }
+
+  private getCoverImageUrl(talk: Talk | null): string {
+    return (
+      this.talksService.resolveCoverImageUrl(talk?.coverImageUrl) ??
+      this.placeholderCoverUrl
+    );
+  }
+
+  private rejectCoverFile(input: HTMLInputElement, message: string): void {
+    input.value = '';
+    this.selectedCoverFile.set(null);
+    this.coverPreviewUrl.set(this.getCoverImageUrl(this.selectedTalk()));
+    this.toastService.showError(message);
+  }
+
+  private setObjectPreviewUrl(file: File): void {
+    this.revokeObjectPreviewUrl();
+    this.objectPreviewUrl = URL.createObjectURL(file);
+    this.coverPreviewUrl.set(this.objectPreviewUrl);
+  }
+
+  private revokeObjectPreviewUrl(): void {
+    if (!this.objectPreviewUrl) {
+      return;
+    }
+
+    URL.revokeObjectURL(this.objectPreviewUrl);
+    this.objectPreviewUrl = null;
   }
 
   private hasBlankRequiredFields(): boolean {

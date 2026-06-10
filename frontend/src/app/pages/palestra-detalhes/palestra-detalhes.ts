@@ -24,6 +24,7 @@ export class PalestraDetalhes implements OnInit {
   protected readonly isLoading = signal(false);
   protected readonly isSubmitting = signal(false);
   protected readonly hasError = signal(false);
+  protected readonly placeholderCoverUrl = '/talk-placeholder.svg';
   protected readonly isEnrolled = computed(() => {
     const talk = this.talk();
 
@@ -83,6 +84,13 @@ export class PalestraDetalhes implements OnInit {
         },
         error: (error: unknown) => this.handleEnrollmentError(error),
       });
+  }
+
+  protected getCoverImageUrl(talk: Talk): string {
+    return (
+      this.talksService.resolveCoverImageUrl(talk.coverImageUrl) ??
+      this.placeholderCoverUrl
+    );
   }
 
   protected formatDate(date: string): string {
