@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
+import { AreaPalestrasLayout } from './pages/area-palestras-layout/area-palestras-layout';
 import { Cadastro } from './pages/cadastro/cadastro';
 import { Login } from './pages/login/login';
 import { CriarPalestra } from './pages/criar-palestra/criar-palestra';
@@ -22,17 +23,21 @@ export const routes: Routes = [
   },
   {
     path: 'palestras',
-    component: Palestras,
+    component: AreaPalestrasLayout,
     canActivate: [authGuard],
-  },
-  {
-    path: 'palestras/criar',
-    component: CriarPalestra,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'palestras/minhas',
-    component: MinhasPalestras,
-    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        component: Palestras,
+      },
+      {
+        path: 'criar',
+        component: CriarPalestra,
+      },
+      {
+        path: 'minhas',
+        component: MinhasPalestras,
+      },
+    ],
   },
 ];

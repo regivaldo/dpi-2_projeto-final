@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   catchError,
   debounceTime,
@@ -18,7 +18,7 @@ import { Talk, TalksService } from '../../core/talks/talks.service';
 
 @Component({
   selector: 'app-palestras',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl: './palestras.html',
   styleUrl: './palestras.scss',
 })
@@ -28,7 +28,6 @@ export class Palestras implements OnInit {
   private readonly talksService = inject(TalksService);
 
   protected readonly currentUser = this.authService.getCurrentUser();
-  protected readonly isSpeaker = this.currentUser?.role === 'Palestrante';
   protected readonly searchControl = new FormControl('', { nonNullable: true });
   protected readonly talks = signal<Talk[]>([]);
   protected readonly isLoading = signal(false);
@@ -66,11 +65,6 @@ export class Palestras implements OnInit {
     if (!this.currentUser) {
       void this.router.navigate(['/login']);
     }
-  }
-
-  protected logout(): void {
-    this.authService.logout();
-    void this.router.navigate(['/login']);
   }
 
   private handleListError(error: unknown): void {

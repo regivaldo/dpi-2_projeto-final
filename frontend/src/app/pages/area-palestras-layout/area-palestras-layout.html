@@ -1,0 +1,36 @@
+<main class="authenticated-page">
+  <header class="app-header">
+    <a class="brand" routerLink="/palestras" aria-label="Ir para palestras">
+      <span class="brand-mark" aria-hidden="true">IP</span>
+      <span>IFSP Palestra</span>
+    </a>
+
+    <nav class="section-nav" aria-label="Navegação de palestras">
+      <a
+        routerLink="/palestras"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        Palestras
+      </a>
+
+      @if (isSpeaker) {
+        <a routerLink="/palestras/criar" routerLinkActive="active">
+          Criar Palestra
+        </a>
+        <a routerLink="/palestras/minhas" routerLinkActive="active">
+          Minhas Palestras
+        </a>
+      }
+    </nav>
+
+    <nav class="user-actions" aria-label="Ações do usuário">
+      <strong>{{ currentUser?.fullName }}</strong>
+      <button type="button" class="logout-button" (click)="logout()">Sair</button>
+    </nav>
+  </header>
+
+  <section class="content">
+    <router-outlet />
+  </section>
+</main>

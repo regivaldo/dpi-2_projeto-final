@@ -65,17 +65,14 @@ describe('Palestras', () => {
     fixture = TestBed.createComponent(Palestras);
   });
 
-  it('should show the authenticated speaker header actions and talk cards', fakeAsync(() => {
+  it('should show the talk list content', fakeAsync(() => {
     fixture.detectChanges();
     tick(250);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.textContent).toContain('IFSP Palestra');
-    expect(compiled.textContent).toContain('Maria Palestrante');
-    expect(compiled.textContent).toContain('Criar Palestra');
-    expect(compiled.textContent).toContain('Minhas Palestras');
+    expect(compiled.textContent).toContain('Conteúdos disponíveis');
     expect(compiled.textContent).toContain('Arquitetura de APIs com NestJS');
     expect(compiled.textContent).toContain('Criado por: Maria Palestrante');
     expect(compiled.querySelector('img.talk-image')).toBeTruthy();

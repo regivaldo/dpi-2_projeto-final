@@ -1,12 +1,4 @@
-.placeholder-page {
-  display: grid;
-  place-items: center;
-  min-height: 100dvh;
-  padding: 24px;
-  background: var(--color-bg);
-}
-
-section {
+.placeholder-content {
   width: min(100%, 560px);
 }
 
