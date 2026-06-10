@@ -5,7 +5,7 @@ Este é um projeto para gerenciamento de palestras, onde usuários autenticados 
 Usuários com perfil Usuário, poderão assistir os vídeos dos palestrantes.
 
 ### Frontend
-O frontend é construído em Angular
+O frontend é construído em Angular, usando o conceito de componentes standalone.
 
 ### Backend
 O backend é construído em NestJs

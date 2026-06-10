@@ -7,6 +7,16 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  fullName: string;
+  birthDate: string;
+  email: string;
+  password: string;
+  phone: string;
+  title: string;
+  role: string;
+}
+
 export interface AuthenticatedUser {
   id: string;
   fullName: string;
@@ -32,6 +42,10 @@ export class AuthService {
     return this.http
       .post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials)
       .pipe(tap((response) => this.saveSession(response)));
+  }
+
+  register(data: RegisterRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/register`, data);
   }
 
   getToken(): string | null {

@@ -55,4 +55,38 @@ describe('AuthService', () => {
       },
     });
   });
+
+  it('should register against the backend without storing a session', () => {
+    service
+      .register({
+        fullName: 'Usuario Teste',
+        birthDate: '2000-01-15',
+        email: 'usuario@email.com',
+        password: 'Senha@123',
+        phone: '11999999999',
+        title: 'Graduação',
+        role: 'Usuário',
+      })
+      .subscribe((response) => {
+        expect(response.accessToken).toBe('token');
+        expect(service.getToken()).toBeNull();
+      });
+
+    const request = httpTestingController.expectOne(
+      'http://localhost:3000/auth/register',
+    );
+    expect(request.request.method).toBe('POST');
+
+    request.flush({
+      accessToken: 'token',
+      user: {
+        id: '1',
+        fullName: 'Usuario Teste',
+        email: 'usuario@email.com',
+        phone: '11999999999',
+        title: 'Graduação',
+        role: 'Usuário',
+      },
+    });
+  });
 });

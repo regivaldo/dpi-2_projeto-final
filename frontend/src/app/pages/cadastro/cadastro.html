@@ -1,1 +1,138 @@
-<main class="cadastro-page"></main>
+<main class="cadastro-page">
+  <video class="background-video" autoplay muted loop playsinline aria-hidden="true">
+    <source
+      src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+      type="video/mp4"
+    />
+  </video>
+
+  <div class="video-shade" aria-hidden="true"></div>
+
+  <section class="intro" aria-label="Apresentacao">
+    <p class="eyebrow">IFSP Palestra</p>
+    <h1>Encontre, organize e acompanhe palestras em um so lugar.</h1>
+    <p>
+      Uma plataforma para palestrantes publicarem conteudos e usuarios se
+      inscreverem em experiencias de aprendizagem.
+    </p>
+  </section>
+
+  <section class="auth-panel" aria-label="Cadastro">
+    <div class="auth-square">
+      @if (registrationCompleted) {
+        <div class="success-state">
+          <p class="eyebrow">Cadastro</p>
+          <h2>Cadastro realizado com sucesso.</h2>
+          <a class="success-action" routerLink="/login">Ir para Login</a>
+        </div>
+      } @else {
+        <form
+          class="cadastro-form"
+          [formGroup]="cadastroForm"
+          (ngSubmit)="submitCadastro()"
+        >
+          <div class="form-heading">
+            <p class="eyebrow">Cadastro</p>
+            <h2>Criar conta</h2>
+          </div>
+
+          <div class="form-grid">
+            <div class="field field-wide">
+              <label for="fullName">Nome completo</label>
+              <input
+                id="fullName"
+                type="text"
+                formControlName="fullName"
+                autocomplete="name"
+                placeholder="Seu nome completo"
+              />
+            </div>
+
+            <div class="field">
+              <label for="birthDate">Data de nascimento</label>
+              <input
+                id="birthDate"
+                type="date"
+                formControlName="birthDate"
+                autocomplete="bday"
+              />
+            </div>
+
+            <div class="field">
+              <label for="phone">Telefone</label>
+              <input
+                id="phone"
+                type="tel"
+                formControlName="phone"
+                autocomplete="tel"
+                placeholder="(11) 99999-9999"
+              />
+            </div>
+
+            <div class="field field-wide">
+              <label for="email">E-mail</label>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                placeholder="seu@email.com"
+              />
+            </div>
+
+            <div class="field">
+              <label for="password">Senha</label>
+              <input
+                id="password"
+                type="password"
+                formControlName="password"
+                autocomplete="new-password"
+                placeholder="Sua senha"
+              />
+            </div>
+
+            <div class="field">
+              <label for="confirmPassword">Confirmar senha</label>
+              <input
+                id="confirmPassword"
+                type="password"
+                formControlName="confirmPassword"
+                autocomplete="new-password"
+                placeholder="Repita sua senha"
+              />
+            </div>
+
+            <div class="field">
+              <label for="title">Titulacao</label>
+              <select id="title" formControlName="title">
+                <option value="">Selecione</option>
+                @for (title of titleOptions; track title) {
+                  <option [value]="title">{{ title }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="role">Perfil</label>
+              <select id="role" formControlName="role">
+                <option value="">Selecione</option>
+                @for (role of roleOptions; track role) {
+                  <option [value]="role">{{ role }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Cadastrando...' : 'Cadastrar' }}
+          </button>
+
+          <p class="login-note">
+            Ja tem uma conta?
+            <a routerLink="/login" aria-label="Ir para login">Entrar</a>
+          </p>
+        </form>
+      }
+    </div>
+  </section>
+</main>
