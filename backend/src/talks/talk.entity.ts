@@ -28,10 +28,10 @@ export class Talk {
   @Column({ name: 'start_time', type: 'time' })
   startTime: string;
 
-  @Column({ name: 'folder_url', length: 500, nullable: true })
+  @Column({ name: 'folder_url', type: 'varchar', length: 500, nullable: true })
   folderUrl?: string | null;
 
-  @Column({ name: 'cover_image_url', length: 500, nullable: true })
+  @Column({ name: 'cover_image_url', type: 'varchar', length: 500, nullable: true })
   coverImageUrl?: string | null;
 
   @ManyToOne(() => User, { eager: true, nullable: false })
