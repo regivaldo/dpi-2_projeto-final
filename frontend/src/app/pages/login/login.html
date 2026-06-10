@@ -1,0 +1,57 @@
+<main class="login-page">
+  <video class="background-video" autoplay muted loop playsinline aria-hidden="true">
+    <source
+      src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+      type="video/mp4"
+    />
+  </video>
+
+  <div class="video-shade" aria-hidden="true"></div>
+
+  <section class="intro" aria-label="Apresentacao">
+    <p class="eyebrow">IFSP Palestra</p>
+    <h1>Encontre, organize e acompanhe palestras em um so lugar.</h1>
+    <p>
+      Uma plataforma para palestrantes publicarem conteudos e usuarios se
+      inscreverem em experiencias de aprendizagem.
+    </p>
+  </section>
+
+  <section class="auth-panel" aria-label="Autenticacao">
+    <div class="auth-square">
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+        <div class="form-heading">
+          <p class="eyebrow">Acesso</p>
+          <h2>Entrar</h2>
+        </div>
+
+        <label for="email">E-mail</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="seu@email.com"
+        />
+
+        <label for="password">Senha</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="Sua senha"
+        />
+
+        <button type="submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Autenticando...' : 'Autenticar' }}
+        </button>
+
+        <p class="register-note">
+          Novo por aqui?
+          <a routerLink="/cadastro" aria-label="Criar cadastro">Crie sua conta</a>
+        </p>
+      </form>
+    </div>
+  </section>
+</main>

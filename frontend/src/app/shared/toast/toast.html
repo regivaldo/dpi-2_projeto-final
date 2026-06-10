@@ -1,0 +1,14 @@
+@if (toastService.message(); as message) {
+  <section class="toast toast-error" role="alert" aria-live="assertive">
+    <span class="toast-icon" aria-hidden="true">!</span>
+    <p>{{ message.text }}</p>
+    <button
+      type="button"
+      class="toast-close"
+      aria-label="Fechar mensagem"
+      (click)="toastService.dismiss()"
+    >
+      x
+    </button>
+  </section>
+}

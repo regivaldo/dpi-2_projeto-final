@@ -13,6 +13,9 @@ O backend é construído em NestJs
 ### Banco de dados
 O banco de dados é em Mysql e está sendo executado pelo Docker
 
+## Idioma
+O conteúdo do sistema deve ser em português do Brasil. Acentue corretamente as palavras conforme a lingua portuguesa.
+
 ## Project Structure & Module Organization
 
 This repository has two independent TypeScript applications:
@@ -60,3 +63,14 @@ Pull requests should include a short description, test commands run, linked issu
 ## Security & Configuration Tips
 
 Do not commit secrets, local environment files, or generated dependency directories such as `node_modules/`. Keep package-lock files committed when dependencies change.
+
+## Angular MCP
+
+Sempre que a tarefa envolver o frontend Angular, use o MCP `angular-cli` configurado em `.vscode/mcp.json` antes de fazer alterações relevantes.
+
+Use o MCP para:
+- consultar padrões e recursos do Angular;
+- gerar ou validar componentes, rotas e serviços quando aplicável;
+- conferir comandos e estrutura do Angular CLI.
+
+O frontend fica em `frontend/`, então comandos e validações Angular devem considerar esse diretório como raiz do workspace Angular.
