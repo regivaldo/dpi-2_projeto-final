@@ -4,11 +4,20 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { AuthenticatedUser, AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpTestingController: HttpTestingController;
+
+  const user: AuthenticatedUser = {
+    id: '1',
+    fullName: 'Usuário Teste',
+    email: 'usuario@email.com',
+    phone: '11999999999',
+    title: 'Graduação',
+    role: 'Usuário',
+  };
 
   beforeEach(() => {
     localStorage.clear();
@@ -32,6 +41,8 @@ describe('AuthService', () => {
       .subscribe((response) => {
         expect(response.accessToken).toBe('token');
         expect(service.getToken()).toBe('token');
+        expect(service.getCurrentUser()).toEqual(user);
+        expect(service.isAuthenticated()).toBe(true);
       });
 
     const request = httpTestingController.expectOne(
@@ -45,21 +56,40 @@ describe('AuthService', () => {
 
     request.flush({
       accessToken: 'token',
-      user: {
-        id: '1',
-        fullName: 'Usuario Teste',
-        email: 'usuario@email.com',
-        phone: '11999999999',
-        title: 'Graduação',
-        role: 'Usuário',
-      },
+      user,
     });
+  });
+
+  it('should accept alternate token property names from the backend', () => {
+    service
+      .login({ email: 'usuario@email.com', password: 'Senha@123' })
+      .subscribe(() => {
+        expect(service.getToken()).toBe('token-alternativo');
+        expect(service.isAuthenticated()).toBe(true);
+      });
+
+    const request = httpTestingController.expectOne(
+      'http://localhost:3000/auth/login',
+    );
+
+    request.flush({
+      token: 'token-alternativo',
+      user,
+    });
+  });
+
+  it('should ignore invalid stored token values', () => {
+    localStorage.setItem('ifsp-palestra-token', 'undefined');
+    localStorage.setItem('ifsp-palestra-user', JSON.stringify(user));
+
+    expect(service.getToken()).toBeNull();
+    expect(service.isAuthenticated()).toBe(false);
   });
 
   it('should register against the backend without storing a session', () => {
     service
       .register({
-        fullName: 'Usuario Teste',
+        fullName: 'Usuário Teste',
         birthDate: '2000-01-15',
         email: 'usuario@email.com',
         password: 'Senha@123',
@@ -70,6 +100,7 @@ describe('AuthService', () => {
       .subscribe((response) => {
         expect(response.accessToken).toBe('token');
         expect(service.getToken()).toBeNull();
+        expect(service.getCurrentUser()).toBeNull();
       });
 
     const request = httpTestingController.expectOne(
@@ -79,14 +110,18 @@ describe('AuthService', () => {
 
     request.flush({
       accessToken: 'token',
-      user: {
-        id: '1',
-        fullName: 'Usuario Teste',
-        email: 'usuario@email.com',
-        phone: '11999999999',
-        title: 'Graduação',
-        role: 'Usuário',
-      },
+      user,
     });
+  });
+
+  it('should clear the stored session on logout', () => {
+    localStorage.setItem('ifsp-palestra-token', 'token');
+    localStorage.setItem('ifsp-palestra-user', JSON.stringify(user));
+
+    service.logout();
+
+    expect(service.getToken()).toBeNull();
+    expect(service.getCurrentUser()).toBeNull();
+    expect(service.isAuthenticated()).toBe(false);
   });
 });

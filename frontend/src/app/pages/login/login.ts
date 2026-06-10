@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { ToastService } from '../../shared/toast/toast.service';
@@ -19,6 +19,7 @@ import { ToastService } from '../../shared/toast/toast.service';
 })
 export class Login {
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
   protected readonly loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -46,6 +47,7 @@ export class Login {
       })
       .pipe(finalize(() => (this.isSubmitting = false)))
       .subscribe({
+        next: () => void this.router.navigate(['/palestras']),
         error: (error: unknown) => this.handleLoginError(error),
       });
   }

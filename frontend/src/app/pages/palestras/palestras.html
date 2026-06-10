@@ -1,0 +1,62 @@
+<main class="authenticated-page">
+  <header class="app-header">
+    <a class="brand" routerLink="/palestras" aria-label="Ir para palestras">
+      <span class="brand-mark" aria-hidden="true">IP</span>
+      <span>IFSP Palestra</span>
+    </a>
+
+    <div class="search-area">
+      <label for="search">Buscar palestras</label>
+      <input
+        id="search"
+        type="search"
+        [formControl]="searchControl"
+        placeholder="Buscar por título ou descrição"
+      />
+    </div>
+
+    <nav class="user-actions" aria-label="Ações do usuário">
+      @if (isSpeaker) {
+        <a class="header-button" routerLink="/palestras/criar">Criar Palestra</a>
+        <a class="header-button" routerLink="/palestras/minhas">Minhas Palestras</a>
+      }
+
+      <strong>{{ currentUser?.fullName }}</strong>
+      <button type="button" class="logout-button" (click)="logout()">Sair</button>
+    </nav>
+  </header>
+
+  <section class="content" aria-label="Palestras disponíveis">
+    <div class="section-heading">
+      <p class="eyebrow">Palestras</p>
+      <h1>Conteúdos disponíveis</h1>
+    </div>
+
+    @if (isLoading()) {
+      <p class="state-message">Carregando palestras...</p>
+    } @else if (hasError()) {
+      <p class="state-message error-message">
+        Não foi possível carregar as palestras. Tente novamente.
+      </p>
+    } @else if (talks().length === 0) {
+      <p class="state-message">Nenhuma palestra encontrada.</p>
+    } @else {
+      <div class="talk-grid">
+        @for (talk of talks(); track talk.id) {
+          <article class="talk-card">
+            <img
+              src="/talk-placeholder.svg"
+              alt=""
+              class="talk-image"
+              loading="lazy"
+            />
+            <div class="talk-card-content">
+              <h2>{{ talk.title }}</h2>
+              <p>Criado por: {{ talk.speaker.fullName }}</p>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</main>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="Imagem padrão de palestra">
+  <rect width="960" height="540" fill="#17221f"/>
+  <path d="M0 370h960v170H0z" fill="#50a48c"/>
+  <path d="M0 0h960v310H0z" fill="#e3674f"/>
+  <circle cx="760" cy="150" r="86" fill="#e9e7b1"/>
+  <rect x="150" y="190" width="440" height="42" rx="10" fill="#fff" opacity=".92"/>
+  <rect x="150" y="266" width="320" height="34" rx="9" fill="#fff" opacity=".75"/>
+  <rect x="150" y="340" width="250" height="24" rx="8" fill="#17221f" opacity=".55"/>
+</svg>

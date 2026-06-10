@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { vi } from 'vitest';
 import { AuthService, LoginRequest } from '../../core/auth/auth.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Login } from './login';
@@ -16,7 +17,7 @@ describe('Login', () => {
       accessToken: 'token',
       user: {
         id: '1',
-        fullName: 'Usuario Teste',
+        fullName: 'Usuário Teste',
         email: 'usuario@email.com',
         phone: '11999999999',
         title: 'Graduação',
@@ -63,7 +64,7 @@ describe('Login', () => {
     fixture.detectChanges();
 
     expect(toastService.message()?.text).toBe(
-      'Os campos e-mail e senha s\u00e3o de preenchimento obrigat\u00f3rio',
+      'Os campos e-mail e senha são de preenchimento obrigatório',
     );
     toastService.dismiss();
   });
@@ -82,7 +83,7 @@ describe('Login', () => {
     fixture.detectChanges();
 
     expect(toastService.message()?.text).toBe(
-      'O campo e-mail \u00e9 de preenchimento obrigat\u00f3rio',
+      'O campo e-mail é de preenchimento obrigatório',
     );
     toastService.dismiss();
   });
@@ -101,7 +102,7 @@ describe('Login', () => {
     fixture.detectChanges();
 
     expect(toastService.message()?.text).toBe(
-      'O campo senha \u00e9 de preenchimento obrigat\u00f3rio',
+      'O campo senha é de preenchimento obrigatório',
     );
     toastService.dismiss();
   });
@@ -120,6 +121,19 @@ describe('Login', () => {
     });
   });
 
+  it('should navigate to the authenticated area after login', () => {
+    const fixture = TestBed.createComponent(Login);
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    fixture.detectChanges();
+
+    fillInput(fixture.nativeElement, 'input[type="email"]', 'usuario@email.com');
+    fillInput(fixture.nativeElement, 'input[type="password"]', 'Senha@123');
+    submitForm(fixture.nativeElement);
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/palestras']);
+  });
+
   it('should show an invalid credentials toast when backend returns unauthorized', () => {
     loginResponse = throwError(() => new HttpErrorResponse({ status: 401 }));
     const fixture = TestBed.createComponent(Login);
@@ -130,7 +144,7 @@ describe('Login', () => {
     fillInput(fixture.nativeElement, 'input[type="password"]', 'Senha@123');
     submitForm(fixture.nativeElement);
 
-    expect(toastService.message()?.text).toBe('E-mail ou senha inv\u00e1lidos.');
+    expect(toastService.message()?.text).toBe('E-mail ou senha inválidos.');
     toastService.dismiss();
   });
 });

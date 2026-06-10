@@ -27,7 +27,9 @@ export interface AuthenticatedUser {
 }
 
 export interface LoginResponse {
-  accessToken: string;
+  accessToken?: string;
+  access_token?: string;
+  token?: string;
   user: AuthenticatedUser;
 }
 
@@ -49,7 +51,32 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    const token = localStorage.getItem(this.tokenKey);
+
+    if (!token || token === 'undefined' || token === 'null') {
+      return null;
+    }
+
+    return token;
+  }
+
+  getCurrentUser(): AuthenticatedUser | null {
+    const storedUser = localStorage.getItem(this.userKey);
+
+    if (!storedUser) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(storedUser) as AuthenticatedUser;
+    } catch {
+      this.logout();
+      return null;
+    }
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken() && !!this.getCurrentUser();
   }
 
   logout(): void {
@@ -58,7 +85,18 @@ export class AuthService {
   }
 
   private saveSession(response: LoginResponse): void {
-    localStorage.setItem(this.tokenKey, response.accessToken);
+    const token = this.extractToken(response);
+
+    if (!token) {
+      this.logout();
+      throw new Error('Token de autenticação não foi retornado pela API.');
+    }
+
+    localStorage.setItem(this.tokenKey, token);
     localStorage.setItem(this.userKey, JSON.stringify(response.user));
+  }
+
+  private extractToken(response: LoginResponse): string {
+    return response.accessToken ?? response.access_token ?? response.token ?? '';
   }
 }

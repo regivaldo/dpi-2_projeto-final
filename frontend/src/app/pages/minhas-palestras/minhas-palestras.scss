@@ -1,0 +1,41 @@
+.placeholder-page {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: 24px;
+  background: var(--color-bg);
+}
+
+section {
+  width: min(100%, 560px);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--color-highlight);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+}
+
+p:last-of-type {
+  color: rgba(255, 255, 255, 0.76);
+  line-height: 1.7;
+}
+
+a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 16px;
+  color: #17221f;
+  font-weight: 900;
+  text-decoration: none;
+  background: var(--color-highlight);
+  border-radius: 4px;
+}
