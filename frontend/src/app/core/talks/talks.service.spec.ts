@@ -74,6 +74,48 @@ describe('TalksService', () => {
     });
   });
 
+  it('should send the bearer token when listing my talks', () => {
+    service.listMyTalks().subscribe();
+
+    const request = httpTestingController.expectOne(
+      'http://localhost:3000/talks/mine?limit=100',
+    );
+
+    expect(request.request.method).toBe('GET');
+    expect(request.request.headers.get('Authorization')).toBe('Bearer token');
+
+    request.flush({
+      items: [],
+      meta: {
+        page: 1,
+        limit: 100,
+        total: 0,
+        totalPages: 0,
+      },
+    });
+  });
+
+  it('should send the search term when listing my talks', () => {
+    service.listMyTalks(' angular ').subscribe();
+
+    const request = httpTestingController.expectOne(
+      'http://localhost:3000/talks/mine?limit=100&search=angular',
+    );
+
+    expect(request.request.method).toBe('GET');
+    expect(request.request.headers.get('Authorization')).toBe('Bearer token');
+
+    request.flush({
+      items: [],
+      meta: {
+        page: 1,
+        limit: 100,
+        total: 0,
+        totalPages: 0,
+      },
+    });
+  });
+
   it('should create a talk with the bearer token', () => {
     const payload: CreateTalkRequest = {
       title: 'Angular moderno',

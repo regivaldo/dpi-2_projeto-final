@@ -14,6 +14,7 @@ export interface Talk {
   description: string;
   date: string;
   startTime: string;
+  folderUrl?: string;
   speaker: TalkSpeaker;
 }
 
@@ -42,6 +43,23 @@ export class TalksService {
   private readonly apiUrl = 'http://localhost:3000';
 
   listTalks(search = ''): Observable<TalksResponse> {
+    return this.listTalksFromEndpoint(`${this.apiUrl}/talks`, search);
+  }
+
+  listMyTalks(search = ''): Observable<TalksResponse> {
+    return this.listTalksFromEndpoint(`${this.apiUrl}/talks/mine`, search);
+  }
+
+  createTalk(data: CreateTalkRequest): Observable<Talk> {
+    return this.http.post<Talk>(`${this.apiUrl}/talks`, data, {
+      headers: this.buildAuthHeaders(),
+    });
+  }
+
+  private listTalksFromEndpoint(
+    endpoint: string,
+    search: string,
+  ): Observable<TalksResponse> {
     let params = new HttpParams().set('limit', 100);
     const headers = this.buildAuthHeaders();
     const normalizedSearch = search.trim();
@@ -50,15 +68,9 @@ export class TalksService {
       params = params.set('search', normalizedSearch);
     }
 
-    return this.http.get<TalksResponse>(`${this.apiUrl}/talks`, {
+    return this.http.get<TalksResponse>(endpoint, {
       headers,
       params,
-    });
-  }
-
-  createTalk(data: CreateTalkRequest): Observable<Talk> {
-    return this.http.post<Talk>(`${this.apiUrl}/talks`, data, {
-      headers: this.buildAuthHeaders(),
     });
   }
 
