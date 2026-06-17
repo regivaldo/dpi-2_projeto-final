@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   catchError,
   debounceTime,
@@ -18,7 +18,7 @@ import { Talk, TalksService } from '../../core/talks/talks.service';
 
 @Component({
   selector: 'app-palestras',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './palestras.html',
   styleUrl: './palestras.scss',
 })
