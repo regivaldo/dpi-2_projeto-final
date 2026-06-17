@@ -1,0 +1,90 @@
+<section aria-label="Detalhes da palestra">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Palestras</p>
+      <h1>Detalhes da Palestra</h1>
+    </div>
+    <a routerLink="/palestras" class="secondary-action">Voltar</a>
+  </div>
+
+  @if (isLoading()) {
+    <p class="state-message">Carregando dados da palestra...</p>
+  } @else if (hasError()) {
+    <p class="state-message error-message">
+      Não foi possível carregar a palestra. Tente novamente.
+    </p>
+  } @else if (talk(); as talkDetails) {
+    <div class="details-layout">
+      <article class="talk-details">
+        <img
+          [src]="getCoverImageUrl(talkDetails)"
+          alt=""
+          class="talk-image"
+          loading="lazy"
+        />
+
+        <div class="title-row">
+          <h2>{{ talkDetails.title }}</h2>
+          @if (isEnrolled()) {
+            <span class="status-tag">Inscrito</span>
+          }
+        </div>
+
+        <p class="speaker">Criado por: {{ talkDetails.speaker.fullName }}</p>
+        <p class="description">{{ talkDetails.description }}</p>
+
+        <dl class="talk-meta">
+          <div>
+            <dt>Data</dt>
+            <dd>{{ formatDate(talkDetails.date) }}</dd>
+          </div>
+          <div>
+            <dt>Horário</dt>
+            <dd>{{ formatTime(talkDetails.startTime) }}</dd>
+          </div>
+          <div>
+            <dt>Inscritos</dt>
+            <dd>
+              {{ talkDetails.attendees.length }}
+              {{ talkDetails.attendees.length === 1 ? 'inscrito' : 'inscritos' }}
+            </dd>
+          </div>
+        </dl>
+
+        @if (talkDetails.folderUrl) {
+          <a
+            [href]="talkDetails.folderUrl"
+            target="_blank"
+            rel="noreferrer"
+            class="material-link"
+          >
+            Acessar material
+          </a>
+        }
+      </article>
+
+      <aside class="enrollment-panel" aria-label="Inscrição na palestra">
+        @if (isEnrolled()) {
+          <span class="status-tag">Inscrito</span>
+          <button
+            type="button"
+            class="cancel-action"
+            [disabled]="isSubmitting()"
+            (click)="cancelEnrollment()"
+          >
+            {{ isSubmitting() ? 'Cancelando...' : 'Cancelar Inscrição' }}
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="primary-action"
+            [disabled]="isSubmitting()"
+            (click)="enroll()"
+          >
+            {{ isSubmitting() ? 'Inscrevendo...' : 'Inscrever-se' }}
+          </button>
+        }
+      </aside>
+    </div>
+  }
+</section>

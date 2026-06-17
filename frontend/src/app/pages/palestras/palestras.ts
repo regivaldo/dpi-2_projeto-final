@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   catchError,
   debounceTime,
@@ -18,7 +18,7 @@ import { Talk, TalksService } from '../../core/talks/talks.service';
 
 @Component({
   selector: 'app-palestras',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './palestras.html',
   styleUrl: './palestras.scss',
 })
@@ -32,6 +32,7 @@ export class Palestras implements OnInit {
   protected readonly talks = signal<Talk[]>([]);
   protected readonly isLoading = signal(false);
   protected readonly hasError = signal(false);
+  protected readonly placeholderCoverUrl = '/talk-placeholder.svg';
 
   constructor() {
     if (!this.currentUser) {
@@ -65,6 +66,17 @@ export class Palestras implements OnInit {
     if (!this.currentUser) {
       void this.router.navigate(['/login']);
     }
+  }
+
+  protected isEnrolled(talk: Talk): boolean {
+    return talk.attendees.some((attendee) => attendee.id === this.currentUser?.id);
+  }
+
+  protected getCoverImageUrl(talk: Talk): string {
+    return (
+      this.talksService.resolveCoverImageUrl(talk.coverImageUrl) ??
+      this.placeholderCoverUrl
+    );
   }
 
   private handleListError(error: unknown): void {

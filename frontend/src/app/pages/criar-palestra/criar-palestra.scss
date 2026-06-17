@@ -1,5 +1,9 @@
-.placeholder-content {
-  width: min(100%, 560px);
+.section-heading {
+  display: flex;
+  gap: 20px;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
 
 .eyebrow {
@@ -12,22 +16,225 @@
 
 h1 {
   margin: 0;
-  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  line-height: 1;
 }
 
-p:last-of-type {
-  color: rgba(255, 255, 255, 0.76);
-  line-height: 1.7;
+.edit-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 880px) minmax(240px, 360px);
+  gap: 24px;
+  align-items: start;
 }
 
-a {
+.talk-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.cover-field {
+  display: grid;
+  gap: 8px;
+}
+
+.cover-input-grid {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.cover-preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #17221f;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+}
+
+label {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 0 16px;
+  color: var(--color-text);
+  font: inherit;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  outline: none;
+}
+
+input {
+  min-height: 44px;
+}
+
+input[type='file'] {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+
+textarea {
+  min-height: 148px;
+  padding-top: 14px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--color-highlight);
+  box-shadow: 0 0 0 3px rgba(233, 231, 177, 0.18);
+}
+
+.form-actions {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+button,
+.secondary-action {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 42px;
   padding: 0 16px;
-  color: #17221f;
   font-weight: 900;
   text-decoration: none;
-  background: var(--color-highlight);
   border-radius: 4px;
+}
+
+button {
+  color: #17221f;
+  cursor: pointer;
+  background: var(--color-highlight);
+  border: 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
+}
+
+.secondary-action {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.attendees-panel {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+}
+
+.panel-label {
+  margin: 0 0 6px;
+  color: var(--color-highlight);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.attendees-panel h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.empty-attendees {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 700;
+}
+
+.attendees-list {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.attendees-list li {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.attendees-list strong,
+.attendees-list span {
+  overflow-wrap: anywhere;
+}
+
+.attendees-list span {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .section-heading,
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .edit-layout,
+  .talk-form {
+    grid-template-columns: 1fr;
+  }
+
+  .cover-input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cover-preview {
+    max-width: 320px;
+  }
+
+  .secondary-action,
+  button {
+    width: 100%;
+  }
+}
+
+
+.state-message {
+  min-height: 120px;
+  max-width: 880px;
+  margin: 0;
+  padding: 32px;
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
 }

@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsDateString,
   IsNotEmpty,
@@ -27,8 +28,13 @@ export class CreateTalkDto {
   })
   startTime: string;
 
+  @Transform(({ value }) => (value === '' ? undefined : value))
   @IsOptional()
   @IsUrl()
   @MaxLength(500)
   folderUrl?: string;
 }
+
+export type CreateTalkWithCoverDto = CreateTalkDto & {
+  coverImageUrl?: string | null;
+};

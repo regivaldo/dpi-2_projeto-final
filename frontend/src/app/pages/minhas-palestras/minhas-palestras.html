@@ -1,6 +1,95 @@
-<section class="placeholder-content">
-  <p class="eyebrow">Palestrante</p>
-  <h1>Minhas Palestras</h1>
-  <p>A listagem das suas palestras será implementada em uma próxima etapa.</p>
-  <a routerLink="/palestras">Voltar para palestras</a>
+<section aria-label="Minhas palestras cadastradas">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Palestrante</p>
+      <h1>Minhas Palestras</h1>
+    </div>
+
+    <div class="actions-area">
+      <a routerLink="/palestras/criar" class="primary-action">Criar palestra</a>
+      <div class="search-area">
+        <label for="my-talks-search">Buscar minhas palestras</label>
+        <input
+          id="my-talks-search"
+          type="search"
+          [formControl]="searchControl"
+          placeholder="Buscar por título ou descrição"
+        />
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <p class="state-message">Carregando suas palestras...</p>
+  } @else if (isForbidden()) {
+    <p class="state-message error-message">
+      Apenas palestrantes podem acessar esta listagem.
+    </p>
+  } @else if (hasError()) {
+    <p class="state-message error-message">
+      Não foi possível carregar suas palestras. Tente novamente.
+    </p>
+  } @else if (talks().length === 0) {
+    <div class="state-message empty-state">
+      <p>Você ainda não cadastrou nenhuma palestra.</p>
+      <a routerLink="/palestras/criar" class="primary-action">Criar palestra</a>
+    </div>
+  } @else {
+    <div class="talk-grid">
+      @for (talk of talks(); track talk.id) {
+        <article class="talk-card">
+          <div class="talk-card-content">
+            <h2>{{ talk.title }}</h2>
+            <p class="talk-description">{{ talk.description }}</p>
+            <dl class="talk-meta">
+              <div>
+                <dt>Data</dt>
+                <dd>{{ formatDate(talk.date) }}</dd>
+              </div>
+              <div>
+                <dt>Horário</dt>
+                <dd>{{ formatTime(talk.startTime) }}</dd>
+              </div>
+            </dl>
+            @if (talk.folderUrl) {
+              <a
+                [href]="talk.folderUrl"
+                target="_blank"
+                rel="noreferrer"
+                class="material-link"
+              >
+                Acessar material
+              </a>
+            }
+
+            <div class="card-actions">
+              <a [routerLink]="['/palestras/editar', talk.id]" class="edit-action">
+                Editar
+              </a>
+              <button
+                type="button"
+                class="delete-action"
+                (click)="openDeleteModal(talk)"
+              >
+                Deletar
+              </button>
+              <span class="attendees-count">{{ formatAttendeesCount(talk) }}</span>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
 </section>
+
+@if (selectedTalkToDelete(); as talkToDelete) {
+  <app-confirm-modal
+    title="Deletar palestra"
+    [message]="'Tem certeza que deseja deletar a palestra ' + talkToDelete.title + '? Esta ação não poderá ser desfeita.'"
+    confirmText="Deletar"
+    cancelText="Cancelar"
+    [isLoading]="isDeleting()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="closeDeleteModal()"
+  />
+}
