@@ -16,11 +16,11 @@ describe('Cadastro', () => {
       accessToken: 'token',
       user: {
         id: '1',
-        fullName: 'Usu\u00e1rio Teste',
+        fullName: 'Usuário Teste',
         email: 'usuario@email.com',
         phone: '11999999999',
-        title: 'Gradua\u00e7\u00e3o',
-        role: 'Usu\u00e1rio',
+        title: 'Graduaão',
+        role: 'Usuário',
       },
     });
 
@@ -70,7 +70,7 @@ describe('Cadastro', () => {
     fixture.detectChanges();
 
     expect(toastService.message()?.text).toBe(
-      'Os campos nome completo, data de nascimento, e-mail, senha, confirma\u00e7\u00e3o de senha, telefone, titula\u00e7\u00e3o e perfil s\u00e3o de preenchimento obrigat\u00f3rio',
+      'Os campos nome completo, data de nascimento, e-mail, senha, confirmaão de senha, telefone, titulaão e perfil são de preenchimento obrigatório',
     );
     toastService.dismiss();
   });
@@ -90,7 +90,7 @@ describe('Cadastro', () => {
     submitForm(fixture.nativeElement);
 
     expect(toastService.message()?.text).toBe(
-      'A senha deve ter no m\u00ednimo 8 caracteres, com letra mai\u00fascula, letra min\u00fascula, n\u00famero e caractere especial.',
+      'A senha deve ter no mínimo 8 caracteres, com letra maiúscula, letra minúscula, número e caractere especial.',
     );
     expect(lastRegisterRequest).toBeNull();
     toastService.dismiss();
@@ -110,7 +110,7 @@ describe('Cadastro', () => {
     submitForm(fixture.nativeElement);
 
     expect(toastService.message()?.text).toBe(
-      'A senha e a confirma\u00e7\u00e3o de senha devem ser iguais.',
+      'A senha e a confirmaão de senha devem ser iguais.',
     );
     expect(lastRegisterRequest).toBeNull();
     toastService.dismiss();
@@ -124,13 +124,13 @@ describe('Cadastro', () => {
     submitForm(fixture.nativeElement);
 
     expect(lastRegisterRequest).toEqual({
-      fullName: 'Usu\u00e1rio Teste',
+      fullName: 'Usuário Teste',
       birthDate: '2000-01-15',
       email: 'usuario@email.com',
       password: 'Senha@123',
       phone: '11999999999',
-      title: 'Gradua\u00e7\u00e3o',
-      role: 'Usu\u00e1rio',
+      title: 'Graduaão',
+      role: 'Usuário',
     });
   });
 
@@ -159,7 +159,7 @@ describe('Cadastro', () => {
     fillValidForm(fixture.nativeElement);
     submitForm(fixture.nativeElement);
 
-    expect(toastService.message()?.text).toBe('E-mail j\u00e1 cadastrado.');
+    expect(toastService.message()?.text).toBe('E-mail já cadastrado.');
     toastService.dismiss();
   });
 });
@@ -171,14 +171,14 @@ function submitForm(element: HTMLElement): void {
 }
 
 function fillValidForm(element: HTMLElement): void {
-  fillInput(element, 'input[formControlName="fullName"]', ' Usu\u00e1rio Teste ');
+  fillInput(element, 'input[formControlName="fullName"]', ' Usuário Teste ');
   fillInput(element, 'input[type="date"]', '2000-01-15');
   fillInput(element, 'input[type="tel"]', ' 11999999999 ');
   fillInput(element, 'input[type="email"]', ' usuario@email.com ');
   fillInput(element, 'input[formControlName="password"]', 'Senha@123');
   fillInput(element, 'input[formControlName="confirmPassword"]', 'Senha@123');
-  fillSelect(element, 'select[formControlName="title"]', 'Gradua\u00e7\u00e3o');
-  fillSelect(element, 'select[formControlName="role"]', 'Usu\u00e1rio');
+  fillSelect(element, 'select[formControlName="title"]', 'Graduaão');
+  fillSelect(element, 'select[formControlName="role"]', 'Usuário');
 }
 
 function fillInput(element: HTMLElement, selector: string, value: string): void {

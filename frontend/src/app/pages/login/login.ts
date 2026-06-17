@@ -57,15 +57,15 @@ export class Login {
     const passwordIsEmpty = !this.loginForm.controls.password.value?.trim();
 
     if (emailIsEmpty && passwordIsEmpty) {
-      return 'Os campos e-mail e senha s\u00e3o de preenchimento obrigat\u00f3rio';
+      return 'Os campos e-mail e senha são de preenchimento obrigatório';
     }
 
     if (emailIsEmpty) {
-      return 'O campo e-mail \u00e9 de preenchimento obrigat\u00f3rio';
+      return 'O campo e-mail é de preenchimento obrigatório';
     }
 
     if (passwordIsEmpty) {
-      return 'O campo senha \u00e9 de preenchimento obrigat\u00f3rio';
+      return 'O campo senha é de preenchimento obrigatório';
     }
 
     return '';
@@ -73,12 +73,12 @@ export class Login {
 
   private handleLoginError(error: unknown): void {
     if (error instanceof HttpErrorResponse && error.status === 401) {
-      this.toastService.showError('E-mail ou senha inv\u00e1lidos.');
+      this.toastService.showError('E-mail ou senha inválidos.');
       return;
     }
 
     this.toastService.showError(
-      'N\u00e3o foi poss\u00edvel autenticar. Tente novamente.',
+      'Não foi possível autenticar. Tente novamente.',
     );
   }
 }

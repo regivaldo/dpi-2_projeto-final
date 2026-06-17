@@ -23,13 +23,13 @@ export class Cadastro {
   private readonly authService = inject(AuthService);
   private readonly toastService = inject(ToastService);
   protected readonly titleOptions = [
-    'T\u00e9cnico',
-    'Gradua\u00e7\u00e3o',
-    'P\u00f3s-Gradu\u00e7\u00e3o',
+    'Técnico',
+    'Graduaão',
+    'Pós-Graduão',
     'Mestrado',
     'Doutorado',
   ];
-  protected readonly roleOptions = ['Usu\u00e1rio', 'Palestrante'];
+  protected readonly roleOptions = ['Usuário', 'Palestrante'];
   protected readonly cadastroForm = new FormGroup(
     {
       fullName: new FormControl('', [Validators.required]),
@@ -101,11 +101,11 @@ export class Cadastro {
       { label: 'e-mail', value: this.cadastroForm.controls.email.value },
       { label: 'senha', value: this.cadastroForm.controls.password.value },
       {
-        label: 'confirma\u00e7\u00e3o de senha',
+        label: 'confirmaão de senha',
         value: this.cadastroForm.controls.confirmPassword.value,
       },
       { label: 'telefone', value: this.cadastroForm.controls.phone.value },
-      { label: 'titula\u00e7\u00e3o', value: this.cadastroForm.controls.title.value },
+      { label: 'titulaão', value: this.cadastroForm.controls.title.value },
       { label: 'perfil', value: this.cadastroForm.controls.role.value },
     ];
     const emptyFields = requiredFields
@@ -117,23 +117,23 @@ export class Cadastro {
     }
 
     if (emptyFields.length === 1) {
-      return `O campo ${emptyFields[0]} \u00e9 de preenchimento obrigat\u00f3rio`;
+      return `O campo ${emptyFields[0]} é de preenchimento obrigatório`;
     }
 
     return `Os campos ${this.formatFieldList(
       emptyFields,
-    )} s\u00e3o de preenchimento obrigat\u00f3rio`;
+    )} são de preenchimento obrigatório`;
   }
 
   private getPasswordValidationMessage(): string {
     const password = this.cadastroForm.controls.password;
 
     if (password.hasError('minlength') || password.hasError('pattern')) {
-      return 'A senha deve ter no m\u00ednimo 8 caracteres, com letra mai\u00fascula, letra min\u00fascula, n\u00famero e caractere especial.';
+      return 'A senha deve ter no mínimo 8 caracteres, com letra maiúscula, letra minúscula, número e caractere especial.';
     }
 
     if (this.cadastroForm.hasError('passwordMismatch')) {
-      return 'A senha e a confirma\u00e7\u00e3o de senha devem ser iguais.';
+      return 'A senha e a confirmaão de senha devem ser iguais.';
     }
 
     return '';
@@ -148,12 +148,12 @@ export class Cadastro {
 
   private handleCadastroError(error: unknown): void {
     if (error instanceof HttpErrorResponse && error.status === 409) {
-      this.toastService.showError('E-mail j\u00e1 cadastrado.');
+      this.toastService.showError('E-mail já cadastrado.');
       return;
     }
 
     this.toastService.showError(
-      'N\u00e3o foi poss\u00edvel concluir o cadastro. Tente novamente.',
+      'Não foi possível concluir o cadastro. Tente novamente.',
     );
   }
 }
