@@ -1,7 +1,7 @@
 export enum UserTitle {
   Tecnico = 'Técnico',
   Graduacao = 'Graduação',
-  PosGraduacao = 'Pós-Gradução',
+  PosGraduacao = 'Pós-Graduação',
   Mestrado = 'Mestrado',
   Doutorado = 'Doutorado',
 }

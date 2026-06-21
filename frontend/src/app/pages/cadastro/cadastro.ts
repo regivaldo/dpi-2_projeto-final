@@ -9,7 +9,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { ToastService } from '../../shared/toast/toast.service';
 
@@ -73,13 +72,18 @@ export class Cadastro {
         title: formValue.title ?? '',
         role: formValue.role ?? '',
       })
-      .pipe(finalize(() => (this.isSubmitting = false)))
       .subscribe({
         next: () => {
+          this.isSubmitting = false;
           this.registrationCompleted = true;
           this.cadastroForm.reset();
         },
-        error: (error: unknown) => this.handleCadastroError(error),
+        error: (error: unknown) => {
+          // Atualize o botão antes de o toast disparar uma nova detecção de
+          // mudanças. O finalize rodava depois do error e causava o NG0100.
+          this.isSubmitting = false;
+          this.handleCadastroError(error);
+        },
       });
   }
 
