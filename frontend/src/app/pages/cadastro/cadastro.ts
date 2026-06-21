@@ -105,11 +105,11 @@ export class Cadastro {
       { label: 'e-mail', value: this.cadastroForm.controls.email.value },
       { label: 'senha', value: this.cadastroForm.controls.password.value },
       {
-        label: 'confirmaão de senha',
+        label: 'confirmação de senha',
         value: this.cadastroForm.controls.confirmPassword.value,
       },
       { label: 'telefone', value: this.cadastroForm.controls.phone.value },
-      { label: 'titulaão', value: this.cadastroForm.controls.title.value },
+      { label: 'título', value: this.cadastroForm.controls.title.value },
       { label: 'perfil', value: this.cadastroForm.controls.role.value },
     ];
     const emptyFields = requiredFields
@@ -137,7 +137,7 @@ export class Cadastro {
     }
 
     if (this.cadastroForm.hasError('passwordMismatch')) {
-      return 'A senha e a confirmaão de senha devem ser iguais.';
+      return 'A senha e a confirmação de senha devem ser iguais.';
     }
 
     return '';

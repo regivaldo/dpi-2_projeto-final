@@ -223,10 +223,29 @@ describe('CriarPalestra', () => {
     const fixture = createFixture();
     fixture.detectChanges();
 
+    fillValidForm(fixture.nativeElement);
     selectCoverImage(fixture.nativeElement, largeCover);
+    submitForm(fixture.nativeElement);
 
     expect(toastService.message()?.text).toBe('A capa deve ter no máximo 5 MB.');
     expect(createObjectUrlSpy).not.toHaveBeenCalled();
+    expect(lastCreateTalkRequest).toBeNull();
+  });
+
+  it('should allow saving after replacing a large cover with a valid image', () => {
+    const largeCover = new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'grande.jpg', {
+      type: 'image/jpeg',
+    });
+    const validCover = new File(['cover'], 'capa.jpg', { type: 'image/jpeg' });
+    const fixture = createFixture();
+    fixture.detectChanges();
+
+    fillValidForm(fixture.nativeElement);
+    selectCoverImage(fixture.nativeElement, largeCover);
+    selectCoverImage(fixture.nativeElement, validCover);
+    submitForm(fixture.nativeElement);
+
+    expect(lastCreateTalkRequest?.coverImage).toBe(validCover);
   });
 
   it('should omit folderUrl when it is empty on create', () => {

@@ -70,7 +70,7 @@ describe('Cadastro', () => {
     fixture.detectChanges();
 
     expect(toastService.message()?.text).toBe(
-      'Os campos nome completo, data de nascimento, e-mail, senha, confirmaão de senha, telefone, titulaão e perfil são de preenchimento obrigatório',
+      'Os campos nome completo, data de nascimento, e-mail, senha, confirmação de senha, telefone, título e perfil são de preenchimento obrigatório',
     );
     toastService.dismiss();
   });
@@ -110,7 +110,7 @@ describe('Cadastro', () => {
     submitForm(fixture.nativeElement);
 
     expect(toastService.message()?.text).toBe(
-      'A senha e a confirmaão de senha devem ser iguais.',
+      'A senha e a confirmação de senha devem ser iguais.',
     );
     expect(lastRegisterRequest).toBeNull();
     toastService.dismiss();

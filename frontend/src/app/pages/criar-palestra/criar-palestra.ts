@@ -61,6 +61,7 @@ export class CriarPalestra implements OnInit, OnDestroy {
   protected readonly isEditMode = Boolean(this.talkId);
   protected readonly selectedTalk = signal<Talk | null>(null);
   protected readonly selectedCoverFile = signal<File | null>(null);
+  protected readonly coverValidationError = signal<string | null>(null);
   protected readonly coverPreviewUrl = signal(this.placeholderCoverUrl);
   protected readonly isLoading = signal(false);
   protected readonly isSubmitting = signal(false);
@@ -85,6 +86,13 @@ export class CriarPalestra implements OnInit, OnDestroy {
   }
 
   protected submitPalestra(): void {
+    const coverValidationError = this.coverValidationError();
+
+    if (coverValidationError) {
+      this.toastService.showError(coverValidationError);
+      return;
+    }
+
     if (this.palestraForm.invalid || this.hasBlankRequiredFields()) {
       this.palestraForm.markAllAsTouched();
       this.toastService.showError(this.getValidationMessage());
@@ -168,6 +176,7 @@ export class CriarPalestra implements OnInit, OnDestroy {
       return;
     }
 
+    this.coverValidationError.set(null);
     this.selectedCoverFile.set(file);
     this.setObjectPreviewUrl(file);
   }
@@ -218,6 +227,7 @@ export class CriarPalestra implements OnInit, OnDestroy {
 
   private rejectCoverFile(input: HTMLInputElement, message: string): void {
     input.value = '';
+    this.coverValidationError.set(message);
     this.selectedCoverFile.set(null);
     this.coverPreviewUrl.set(this.getCoverImageUrl(this.selectedTalk()));
     this.toastService.showError(message);
