@@ -34,9 +34,13 @@
 }
 
 .intro {
+  display: flex;
+  flex-direction: column;
   align-self: end;
+  justify-content: center;
   max-width: 720px;
-  padding: 56px clamp(24px, 6vw, 96px);
+  height: 100vh;
+  padding: 24px 56px;
 }
 
 .eyebrow {

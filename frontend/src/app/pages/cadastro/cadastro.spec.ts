@@ -19,7 +19,7 @@ describe('Cadastro', () => {
         fullName: 'Usuário Teste',
         email: 'usuario@email.com',
         phone: '11999999999',
-        title: 'Graduaão',
+        title: 'Graduação',
         role: 'Usuário',
       },
     });
@@ -129,7 +129,7 @@ describe('Cadastro', () => {
       email: 'usuario@email.com',
       password: 'Senha@123',
       phone: '11999999999',
-      title: 'Graduaão',
+      title: 'Graduação',
       role: 'Usuário',
     });
   });
@@ -177,7 +177,7 @@ function fillValidForm(element: HTMLElement): void {
   fillInput(element, 'input[type="email"]', ' usuario@email.com ');
   fillInput(element, 'input[formControlName="password"]', 'Senha@123');
   fillInput(element, 'input[formControlName="confirmPassword"]', 'Senha@123');
-  fillSelect(element, 'select[formControlName="title"]', 'Graduaão');
+  fillSelect(element, 'select[formControlName="title"]', 'Graduação');
   fillSelect(element, 'select[formControlName="role"]', 'Usuário');
 }
 

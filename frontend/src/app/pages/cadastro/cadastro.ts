@@ -24,8 +24,8 @@ export class Cadastro {
   private readonly toastService = inject(ToastService);
   protected readonly titleOptions = [
     'Técnico',
-    'Graduaão',
-    'Pós-Graduão',
+    'Graduação',
+    'Pós-Graduação',
     'Mestrado',
     'Doutorado',
   ];
